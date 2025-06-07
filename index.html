@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- iOS Safari 主畫面 icon -->
-    <link rel="apple-touch-icon" href="icon180.png">
+    <link rel="apple-touch-icon" href="uvicon180.png">
     <link rel="icon" type="image/png" sizes="192x192" href="uvicon192.png">
     <meta name="theme-color" content="#42a5f5">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -534,38 +534,39 @@
         <div id="lon-error" class="error-message"></div>
 
         <label for="timezone">🔸選擇時區：<br>
-            <span style="font-size: 0.8em; color: #666;">（自動定位由經度推估時區，請注意夏令時間）</span>
+            <span style="font-size: 0.8em; color: #666;">（自動定位由經度推時區，夏令時間可能UTC+1或+2）</span>
         </label>
         <div class="flex-row">
-            <select id="timezone">
-                <option value="-12">UTC-12:00</option>
-                <option value="-11">UTC-11:00</option>
-                <option value="-10">UTC-10:00</option>
-                <option value="-9">UTC-09:00</option>
-                <option value="-8">UTC-08:00</option>
-                <option value="-7">UTC-07:00</option>
-                <option value="-6">UTC-06:00</option>
-                <option value="-5">UTC-05:00</option>
-                <option value="-4">UTC-04:00</option>
-                <option value="-3">UTC-03:00</option>
-                <option value="-2">UTC-02:00</option>
-                <option value="-1">UTC-01:00</option>
-                <option value="0">UTC±00:00</option>
-                <option value="1">UTC+01:00</option>
-                <option value="2">UTC+02:00</option>
-                <option value="3">UTC+03:00</option>
-                <option value="4">UTC+04:00</option>
-                <option value="5">UTC+05:00</option>
-                <option value="6">UTC+06:00</option>
-                <option value="7">UTC+07:00</option>
-                <option value="8" selected>UTC+08:00</option>
-                <option value="9">UTC+09:00</option>
-                <option value="10">UTC+10:00</option>
-                <option value="11">UTC+11:00</option>
-                <option value="12">UTC+12:00</option>
-                <option value="13">UTC+13:00</option>
-                <option value="14">UTC+14:00</option>
-            </select>
+<select id="timezone">
+    <option value="-12">UTC-12:00（無人區）</option>
+    <option value="-11">UTC-11:00（美屬薩摩亞）</option>
+    <option value="-10">UTC-10:00（夏威夷）</option>
+    <option value="-9">UTC-09:00（阿拉斯加）</option>
+    <option value="-8">UTC-08:00（美西／洛杉磯）</option>
+    <option value="-7">UTC-07:00（美國丹佛／山區時間）</option>
+    <option value="-6">UTC-06:00（墨西哥／芝加哥）</option>
+    <option value="-5">UTC-05:00（美東／紐約）</option>
+    <option value="-4">UTC-04:00（大西洋時間）</option>
+    <option value="-3">UTC-03:00（阿根廷／巴西東岸）</option>
+    <option value="-2">UTC-02:00（南大西洋）</option>
+    <option value="-1">UTC-01:00（亞速群島）</option>
+    <option value="0">UTC±00:00（倫敦／格林威治）</option>
+    <option value="1">UTC+01:00（巴黎／柏林）</option>
+    <option value="2">UTC+02:00（希臘／南非）</option>
+    <option value="3">UTC+03:00（莫斯科／沙烏地）</option>
+    <option value="4">UTC+04:00（杜拜／高加索）</option>
+    <option value="5">UTC+05:00（巴基斯坦）</option>
+    <option value="6">UTC+06:00（孟加拉）</option>
+    <option value="7">UTC+07:00（泰國／越南）</option>
+    <option value="8" selected>UTC+08:00（台灣）</option>
+    <option value="9">UTC+09:00（日本／韓國）</option>
+    <option value="10">UTC+10:00（雪梨／布里斯本（澳東））</option>
+    <option value="11">UTC+11:00（所羅門群島）</option>
+    <option value="12">UTC+12:00（紐西蘭）</option>
+    <option value="13">UTC+13:00（紐西蘭極東部）</option>
+    <option value="14">UTC+14:00（基里巴斯）</option>
+</select>
+
         </div>
         <div id="timezone-error" class="error-message"></div>
 
