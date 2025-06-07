@@ -7,8 +7,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="/uvicon180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/uvicon192.png">
+<!-- iOS Safari 主畫面 icon -->
+<link rel="apple-touch-icon" href="icon180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="uvicon192.png">
     <meta name="theme-color" content="#42a5f5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -508,11 +509,11 @@
             </div>
         </div>
 
-        <label for="lat">🔸輸入緯度（正為北緯）：
+        <label for="lat">🔸輸入緯度（正為北緯）：<br>
             <a href="https://www.google.com/maps/" target="_blank" title="在新分頁打開 Google 地圖">
                 <i class="fas fa-question-circle" style="color: #4A90E2; font-size: 0.8em; margin-left: 0.3em; cursor: pointer;"></i>
             </a>
-            <span style="font-size: 0.8em; color: #666;">（點擊問號查詢經緯度）</span>
+            <span style="font-size: 0.8em; color: #666;">（按問號再按紅色圖釘查經緯度）</span>
         </label>
         <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required>
         <div id="lat-error" class="error-message"></div>
@@ -525,7 +526,7 @@
         <div id="lon-error" class="error-message"></div>
 
        <label for="timezone">🔸選擇時區：<br>
-            <span style="font-size: 0.8em; color: #666;">（自動定位由經度推估時區，請確認正確, 注意夏令時間）</span>
+            <span style="font-size: 0.8em; color: #666;">（自動定位由經度推估時區，請注意夏令時間）</span>
         </label>
         <div class="flex-row">
             <select id="timezone">
@@ -902,13 +903,13 @@
                         <i class="fas fa-chevron-down" id="dataCardIcon"></i>
                     </div>
                     <div class="data-card-content">
-                        <div class="table-note">*1.5倍 / 單位分鐘，基於${weatherDescription}</div>
+                        <div class="table-note">亞洲人1.5倍耐受性 / 單位分鐘 / 基於${weatherDescription}</div>
                         <table class="data-table">
                             <tr>
                                 <th>天頂角</th>
                                 <th>曬傷時間</th>
                                 <th>維他命D 1000 IU (10%)</th>
-                                <th>維他命D 4000 IU (40%)</th>
+                                <th>維他命D 4000 IU (10%)</th>
                             </tr>
                             ${Object.keys(uvData).sort((a, b) => b - a).map(key => `
                                 <tr>
