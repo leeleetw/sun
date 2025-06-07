@@ -7,8 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="apple-touch-icon" href="/uvicon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+    <link rel="apple-touch-icon" href="/uvicon180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/uvicon192.png">
     <meta name="theme-color" content="#42a5f5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -589,8 +589,8 @@
         <label for="quickOutfit">🔸快速穿著預設：</label>
         <select id="quickOutfit" onchange="applyQuickOutfit()">
             <option value="custom">⚙️ 自定義</option>
-            <option value="shorts_tshirt_slippers">🩳 短短拖（短袖短褲拖鞋，約 46%）</option>
-            <option value="longsleeve_longpants_shoes">👖 Molly 長長鞋（長袖長褲鞋，約 10%）</option>
+            <option value="shorts_tshirt_slippers">🩳 短短拖 (45.5%）</option>
+            <option value="longsleeve_longpants_shoes">👖 長長鞋（10%）</option>
         </select>
 
         <label style="margin-top: 2em;">🔸選擇穿著部位與覆蓋情況：</label>
@@ -614,8 +614,8 @@
                 </select>
                 <label for="hands">🔹手：</label>
                 <select id="hands">
-                    <option value="4" selected>無手套（4%）</option>
-                    <option value="0">有手套（0%）</option>
+                    <option value="4" selected>無遮蓋（4%）</option>
+                    <option value="0">有遮蓋（0%）</option>
                 </select>
             </div>
         </div>
@@ -625,7 +625,7 @@
                 <i class="fas fa-chevron-up"></i>
             </div>
             <div class="body-parts-content">
-                <label for="torso">🔹身體與手臂：</label>
+                <label for="torso">🔹上衣：</label>
                 <select id="torso">
                     <option value="47">無遮蓋（47%）</option>
                     <option value="42">比基尼上衣/運動內衣（42%）</option>
@@ -634,7 +634,7 @@
                     <option value="3">七分袖（3%）</option>
                     <option value="0">長袖（0%）</option>
                 </select>
-                <label for="legs">🔹腿部：</label>
+                <label for="legs">🔹下身：</label>
                 <select id="legs">
                     <option value="38">比基尼泳褲（38%）</option>
                     <option value="24">短褲/短裙（24%）</option>
@@ -947,7 +947,7 @@
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-fire"></i></span>
                                 <span class="label">曬傷時間：</span>
-                                <span class="value sunburn-time">天黑啦</span>
+                                <span class="value sunburn-time">天黑沒事</span>
                             </div>
                             <div class="sub-description">（太陽在地平線以下，無曬傷風險）</div>
                         </div>
