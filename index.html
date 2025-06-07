@@ -7,23 +7,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- 對 iPhone 有效 -->
-<link rel="apple-touch-icon" href="/icon.png">
-
-<!-- 對 Android Chrome 有效 -->
-<link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
-
-<!-- 建議：定義主題顏色（Android 任務列背景） -->
-<meta name="theme-color" content="#42a5f5">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="科學曬太陽">
-
-   
-
-
-   <style>
+    <link rel="apple-touch-icon" href="/uvicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+    <meta name="theme-color" content="#42a5f5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="科學曬太陽">
+    <style>
         :root {
             --primary-color: #4A90E2;
             --secondary-color: #DAA520;
@@ -302,7 +292,7 @@
 
         .result-item span.label {
             font-weight: bold;
-            flex-shrink: 0;
+            flex-shrink:  0;
             display: inline-flex;
             align-items: center;
         }
@@ -499,7 +489,7 @@
         <h2>科學曬太陽</h2>
         <p class="subtitle">資料來自 MDJJ猛爹將軍，推薦YT影片 <a href="https://youtu.be/K0wp58UI8sE?si=_XJlQx64gIJDBQZv" target="_blank">點我觀看</a></p>
 
-        <div class="info-card" id="infoCard" data-expanded="true">
+        <div class="info-card" id="infoCard" data-expanded="false">
             <div class="info-card-header" onclick="toggleInfoCard()">
                 <h3>使用說明</h3>
                 <i class="fas fa-chevron-down" id="infoCardIcon"></i>
@@ -508,9 +498,12 @@
                 <p>
                     - 建議中午 12 點附近曬太陽，UVB 相對高(棒棒)，UVA相對低(皮膚老化)。<br>
                     - 在曬傷之前曬夠維生素 D 就對了。<br>
-                    - 輸入經緯度後，後台會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a> 資料算出天頂角。<br>
-                    - 「天頂角數據表」來自MDJJ猛爹將軍影片中的研究報告，根據亞洲人膚色調整過（1.5 倍耐受性）。不在數據表中的天頂角度數由 AI 用線性插值估算，可作參考。<br>
-					- 室內、車內：普通窗戶玻璃幾乎完全阻擋 UVB，但允許 50%–75% 的 UVA 通過，即使在陰天（雲量高），UVA 仍能透過雲層和窗戶到達室內，尤其在窗邊 1–2 公尺內（Kahan et al., 2019）。AI說的，可作參考。
+                    - 輸入經緯度後，後台會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a>
+                    資料算出天頂角。<br>
+                    - 「天頂角數據表」來自MDJJ猛爹將軍影片中的研究報告，根據亞洲人膚色調整過（1.5 倍耐受性）。不在數據表中的天頂角度數由 AI
+                    用線性插值估算，可作參考。<br>
+                    - 室內、車內：普通窗戶玻璃幾乎完全阻擋 UVB，但允許 50%–75% 的 UVA 通過，即使在陰天（雲量高），UVA
+                    仍能透過雲層和窗戶到達室內，尤其在窗邊 1–2 公尺內（Kahan et al., 2019）。AI說的，可作參考。
                 </p>
             </div>
         </div>
@@ -531,7 +524,7 @@
         </div>
         <div id="lon-error" class="error-message"></div>
 
-        <label for="timezone">🔸選擇時區：<br>
+       醛 <label for="timezone">🔸選擇時區：<br>
             <span style="font-size: 0.8em; color: #666;">（自動定位由經度推估時區，請確認正確, 注意夏令時間）</span>
         </label>
         <div class="flex-row">
@@ -597,7 +590,7 @@
         <select id="quickOutfit" onchange="applyQuickOutfit()">
             <option value="custom">⚙️ 自定義</option>
             <option value="shorts_tshirt_slippers">🩳 短短拖（短袖短褲拖鞋，約 46%）</option>
-            <option value="longsleeve_longpants_shoes">👖 長長鞋（長袖長褲鞋，約 10%）</option>
+            <option value="longsleeve_longpants_shoes">👖 Molly 長長鞋（長袖長褲鞋，約 10%）</option>
         </select>
 
         <label style="margin-top: 2em;">🔸選擇穿著部位與覆蓋情況：</label>
@@ -660,7 +653,7 @@
         <button onclick="calculateZenithAngle()"><i class="fas fa-calculator"></i> 計算結果</button>
 
         <div id="result"></div>
-        <div id="dataCard" class="data-card"></div>
+        <div id="dataCard" class="data-card" data-expanded="false"></div>
     </div>
 
     <script>
@@ -681,7 +674,7 @@
         function loadSelections() {
             const selects = document.querySelectorAll('.body-parts-card select');
             selects.forEach(select => {
-                const savedValue = localStorage.getItem(`bodyPart_${select.id}`);
+            const savedValue = localStorage.getItem(`bodyPart_${select.id}`);
                 if (savedValue) select.value = savedValue;
             });
             const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit'];
@@ -767,6 +760,7 @@
             const isExpanded = dataCard.getAttribute('data-expanded') === 'true';
             dataCard.setAttribute('data-expanded', !isExpanded);
             icon.className = `fas fa-chevron-${isExpanded ? 'down' : 'up'}`;
+            localStorage.setItem('dataCardExpanded', !isExpanded);
         }
 
         function toggleInfoCard() {
@@ -938,7 +932,6 @@
                             <strong>天頂角：</strong> 約 ${roundedZenith}°
                         </div>
 						 <p style="text-align: center; color: #46A3FF">${weatherDescription}
-						
                         <div class="result-main-info">
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-person"></i></span>
@@ -947,7 +940,7 @@
                             </div>
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-sun"></i></span>
-                                <span class="label">建議維他命D曝曬時間：</span>
+                                <span class="label">建議曝曬時間：</span>
                                 <span class="value vitd-time">明日請早</span>
                             </div>
                             <div class="sub-description">（太陽尚未升起，無法合成維他命 D）</div>
@@ -970,16 +963,16 @@
                             <strong>太陽高度角：</strong> ${altitude.toFixed(1)}° · 
                             <strong>天頂角：</strong> 約 ${roundedZenith}°
                         </div>
-                       <p style="text-align: center; color: #46A3FF">${weatherDescription}
+                        <p style="text-align: center; color: #46A3FF">${weatherDescription}
                         <div class="result-main-info">
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-person"></i></span>
-                                <span class="label">曝露身表面積：</span>
+                                <span class="label">曝露面積：</span>
                                 <span class="value">${totalBSA.toFixed(1)}%</span>
                             </div>
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-sun"></i></span>
-                                <span class="label">建議維他命D曝曬時間：</span>
+                                <span class="label">建議曝曬時間：</span>
                                 <span class="value vitd-time">${displayMinutesFor4000} 分鐘</span>
                             </div>
                             <div class="sub-description">（可吸收約 4000 IU 維他命 D）</div>
@@ -996,8 +989,8 @@
                 document.getElementById('result').className = `result ${resultClass}`;
                 document.getElementById('result').innerHTML = resultHTML;
                 document.getElementById('dataCard').innerHTML = dataCardHTML;
-                document.getElementById('dataCard').setAttribute('data-expanded', 'true');
-                document.getElementById('dataCardIcon').className = 'fas fa-chevron-up';
+                document.getElementById('dataCard').setAttribute('data-expanded', 'false');
+                document.getElementById('dataCardIcon').className = 'fas fa-chevron-down';
             } catch (error) {
                 console.error('Error in calculateZenithAngle:', error);
                 document.getElementById('result').innerHTML = '<div class="error-message show">計算錯誤，請檢查輸入或資料。';
@@ -1017,11 +1010,25 @@
             const infoCardIcon = document.getElementById('infoCardIcon');
             const savedInfoCardState = localStorage.getItem('infoCardExpanded');
             if (savedInfoCardState === null) {
-                infoCard.setAttribute('data-expanded', 'true');
-                infoCardIcon.className = 'fas fa-chevron-up';
+                infoCard.setAttribute('data-expanded', 'false');
+                infoCardIcon.className = 'fas fa-chevron-down';
             } else {
                 infoCard.setAttribute('data-expanded', savedInfoCardState);
                 infoCardIcon.className = `fas fa-chevron-${savedInfoCardState === 'true' ? 'up' : 'down'}`;
+            }
+
+            const dataCard = document.getElementById('dataCard');
+            const savedDataCardState = localStorage.getItem('dataCardExpanded');
+            if (savedDataCardState === null) {
+                dataCard.setAttribute('data-expanded', 'false');
+                if (document.getElementById('dataCardIcon')) {
+                    document.getElementById('dataCardIcon').className = 'fas fa-chevron-down';
+                }
+            } else {
+                dataCard.setAttribute('data-expanded', savedDataCardState);
+                if (document.getElementById('dataCardIcon')) {
+                    document.getElementById('dataCardIcon').className = `fas fa-chevron-${savedDataCardState === 'true' ? 'up' : 'down'}`;
+                }
             }
 
             const headNeckHandsCard = document.getElementById('bodyPartsHeadNeckHands');
