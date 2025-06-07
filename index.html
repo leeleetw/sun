@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科學曬太陽</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- 對 iPhone 有效 -->
+<link rel="apple-touch-icon" href="/icon.png">
+
+<!-- 對 Android Chrome 有效 -->
+<link rel="icon" type="image/png" sizes="192x192" href="/icon.png">
+
+<!-- 建議：定義主題顏色（Android 任務列背景） -->
+<meta name="theme-color" content="#42a5f5">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="科學曬太陽">
+
+   
+
+
+   <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #DAA520;
+            --tertiary-color: #F8C300;
+            --danger-color: #F44336;
+            --background-light: #F7F9FC;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #E0E0E0;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.12);
+            --warning-bg: #FFF8E1;
+            --warning-border: var(--tertiary-color);
+            --warning-text: #8D6E1C;
+            --danger-bg: #FFEBEE;
+            --danger-border: var(--danger-color);
+            --danger-text: #B71C1C;
+            --error-text: #D32F2F;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 1.5em;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 1.5em auto;
+            background: white;
+            padding: 2.2em;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-medium);
+            animation: fadeIn 0.8s ease-out;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 1em;
+            font-size: 2em;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.6em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-top: -0.5em;
+            margin-bottom: 1.5em;
+            font-size: 0.95em;
+        }
+
+        label {
+            display: block;
+            margin-top: 1.2em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+            color: var(--text-dark);
+            font-size: 1.05em;
+        }
+
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        select {
+            display: block;
+            width: 100%;
+            padding: 0.8em 1em;
+            margin-bottom: 0.8em;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fcfcfc;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+            outline: none;
+            background-color: #fff;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 0.8em;
+            align-items: center;
+        }
+
+        .flex-row input,
+        .flex-row select {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.9em 1.5em;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            margin-top: 1.5em;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        button:hover {
+            background-color: #3a7bd5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(74, 144, 226, 0.2);
+        }
+
+        button.inline {
+            width: auto;
+            margin-top: 0;
+            padding: 0.8em 1.2em;
+            font-size: 0.95em;
+            flex-shrink: 0;
+            background-color: #6c757d;
+            box-shadow: none;
+            min-width: 90px;
+        }
+
+        button.inline:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            color: var(--error-text);
+            font-size: 0.9em;
+            margin-top: -0.5em;
+            margin-bottom: 0.8em;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .body-parts-card {
+            margin-top: 1em;
+            padding: 1.5em;
+            border-radius: 10px;
+            background-color: #EBF5FB;
+            border-left: 6px solid var(--primary-color);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .body-parts-card[data-expanded="false"] {
+            max-height: 50px;
+        }
+
+        .body-parts-card[data-expanded="true"] {
+            max-height: 500px;
+        }
+
+        .body-parts-card[data-expanded="false"] .body-parts-content {
+            display: none;
+        }
+
+        .body-parts-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .body-parts-card-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--primary-color);
+        }
+
+        .body-parts-card-header i {
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .body-parts-card label {
+            font-weight: normal;
+            margin-top: 0.8em;
+            margin-bottom: 0.3em;
+            font-size: 1em;
+            color: var(--text-light);
+        }
+
+        .body-parts-card select {
+            margin-bottom: 0.8em;
+        }
+
+        #result {
+            margin-top: 2em;
+            padding: 2em;
+            border-radius: 10px;
+            background-color: #EBF5FB;
+            border-left: 6px solid var(--primary-color);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            color: var(--text-dark);
+            font-size: 1.1em;
+            line-height: 1.5;
+            transition: all 0.4s ease;
+        }
+
+        .result-zenith-angle {
+            font-size: 0.9em;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 1em;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 1em;
+        }
+
+        .result-zenith-angle strong {
+            font-weight: normal;
+            color: var(--text-light);
+        }
+
+        .result-main-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4em;
+            margin-top: 0.5em;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.2em;
+            margin-bottom: 0em;
+        }
+
+        .result-item-icon {
+            font-size: 1.4em;
+            margin-right: 0.6em;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            width: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-item span.label {
+            font-weight: bold;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .result-item span.value {
+            font-weight: bold;
+            margin-left: auto;
+            font-size: 1.6em;
+            text-align: right;
+        }
+
+        .vitd-time {
+            color: var(--secondary-color);
+            font-size: 1em;
+        }
+
+        .sunburn-time {
+            color: var(--danger-color);
+            font-size: 1em;
+        }
+
+        .sub-description {
+            font-size: 0.85em;
+            color: var(--text-light);
+            margin-top: -8px;
+            margin-left: 2.4em;
+            text-align: left;
+            line-height: 1.0;
+        }
+
+        .warning {
+            background-color: var(--warning-bg);
+            border-left-color: var(--warning-border);
+            color: var(--warning-text);
+        }
+
+        .warning .result-item-icon {
+            color: var(--warning-border);
+        }
+
+        .danger {
+            background-color: var(--danger-bg);
+            border-left-color: var(--danger-color);
+            color: var(--danger-text);
+        }
+
+        .danger .result-item-icon {
+            color: var(--danger-color);
+        }
+
+        .data-card, .info-card {
+            margin-top: 1.5em;
+            padding: 1.5em;
+            border-radius: 10px;
+            background-color: #EBF5FB;
+            border-left: 6px solid var(--primary-color);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .data-card-header, .info-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .data-card-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--primary-color);
+        }
+
+        .info-card-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--primary-color);
+        }
+
+        .data-card-content, .info-card-content {
+            margin-top: 1em;
+            display: block;
+        }
+
+        .data-card[data-expanded="false"] {
+            max-height: 50px;
+        }
+
+        .info-card[data-expanded="false"] {
+            max-height: 50px;
+        }
+
+        .data-card[data-expanded="true"], .info-card[data-expanded="true"] {
+            max-height: 1000px;
+        }
+
+        .data-card[data-expanded="false"] .data-card-content,
+        .info-card[data-expanded="false"] .info-card-content {
+            display: none;
+        }
+
+        .info-card-header i, .data-card-header i {
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.85em;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .data-table th, .data-table td {
+            width: 25%;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .data-table td {
+            background-color: #f9f9f9;
+        }
+
+        .data-table tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        .data-table tr:hover td {
+            background-color: #e6f0fa;
+            transition: background-color 0.2s ease;
+        }
+
+        .table-note {
+            font-size: 0.8em;
+            color: var(--text-light);
+            margin-bottom: 0.1em;
+            text-align: left;
+        }
+
+        .info-card-content p {
+            font-size: 0.95em;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 0.8em; }
+            .container { padding: 1.5em; margin: 0.8em auto; }
+            h2 { font-size: 1.6em; }
+            button { font-size: 1em; padding: 0.7em 1em; }
+            button.inline { padding: 0.6em 0.8em; min-width: 80px; }
+            .flex-row { flex-direction: column; align-items: stretch; gap: 0.5em; }
+            .flex-row button.inline { width: 100%; margin-left: 0; }
+            .body-parts-card { padding: 1em; }
+            .body-parts-card[data-expanded="false"] { max-height: 45px; }
+            .body-parts-card-header h3 { font-size: 1.1em; }
+            .body-parts-card-header i { font-size: 0.8em; }
+            #result { padding: 1.5em; font-size: 1em; line-height: 1.3; }
+            .result-main-info { gap: 0.4em; }
+            .result-item { font-size: 1.1em; margin-bottom: 0em; }
+            .result-item-icon { font-size: 1.2em; width: 1.6em; margin-right: 0.5em; }
+            .result-item span.label { font-size: 1em; }
+            .result-item span.value { font-size: 1.4em; }
+            .vitd-time, .sunburn-time { font-size: 0.9em; }
+            .sub-description { font-size: 0.8em; margin-left: 2.1em; margin-top: -8px; line-height: 1.0; }
+            .data-card, .info-card { padding: 1em; }
+            .data-card-header h3 { font-size: 1.1em; }
+            .info-card-header h3 { font-size: 1.1em; }
+            .info-card-header i, .data-card-header i { font-size: 0.8em; }
+            .data-card[data-expanded="false"] { max-height: 45px; }
+            .info-card[data-expanded="false"] { max-height: 45px; }
+            .data-table { font-size: 0.75em; }
+            .data-table th, .data-table td { padding: 8px; }
+            label span { font-size: 0.85em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>科學曬太陽</h2>
+        <p class="subtitle">資料來自 MDJJ猛爹將軍，推薦YT影片 <a href="https://youtu.be/K0wp58UI8sE?si=_XJlQx64gIJDBQZv" target="_blank">點我觀看</a></p>
+
+        <div class="info-card" id="infoCard" data-expanded="true">
+            <div class="info-card-header" onclick="toggleInfoCard()">
+                <h3>使用說明</h3>
+                <i class="fas fa-chevron-down" id="infoCardIcon"></i>
+            </div>
+            <div class="info-card-content">
+                <p>
+                    - 建議中午 12 點附近曬太陽，UVB 相對高(棒棒)，UVA相對低(皮膚老化)。<br>
+                    - 在曬傷之前曬夠維生素 D 就對了。<br>
+                    - 輸入經緯度後，後台會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a> 資料算出天頂角。<br>
+                    - 「天頂角數據表」來自MDJJ猛爹將軍影片中的研究報告，根據亞洲人膚色調整過（1.5 倍耐受性）。不在數據表中的天頂角度數由 AI 用線性插值估算，可作參考。<br>
+					- 室內、車內：普通窗戶玻璃幾乎完全阻擋 UVB，但允許 50%–75% 的 UVA 通過，即使在陰天（雲量高），UVA 仍能透過雲層和窗戶到達室內，尤其在窗邊 1–2 公尺內（Kahan et al., 2019）。AI說的，可作參考。
+                </p>
+            </div>
+        </div>
+
+        <label for="lat">🔸輸入緯度（正為北緯）：
+            <a href="https://www.google.com/maps/" target="_blank" title="在新分頁打開 Google 地圖">
+                <i class="fas fa-question-circle" style="color: #4A90E2; font-size: 0.8em; margin-left: 0.3em; cursor: pointer;"></i>
+            </a>
+            <span style="font-size: 0.8em; color: #666;">（點擊問號查詢經緯度）</span>
+        </label>
+        <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required>
+        <div id="lat-error" class="error-message"></div>
+
+        <label for="lon">🔸輸入經度（正為東經）：</label>
+        <div class="flex-row">
+            <input type="number" step="any" id="lon" placeholder="例如：121.565" min="-180" max="180" required>
+            <button class="inline" onclick="autoDetectLocation()">📍 自動定位</button>
+        </div>
+        <div id="lon-error" class="error-message"></div>
+
+        <label for="timezone">🔸選擇時區：<br>
+            <span style="font-size: 0.8em; color: #666;">（自動定位由經度推估時區，請確認正確, 注意夏令時間）</span>
+        </label>
+        <div class="flex-row">
+            <select id="timezone">
+                <option value="-12">UTC-12:00</option>
+                <option value="-11">UTC-11:00</option>
+                <option value="-10">UTC-10:00</option>
+                <option value="-9">UTC-09:00</option>
+                <option value="-8">UTC-08:00</option>
+                <option value="-7">UTC-07:00</option>
+                <option value="-6">UTC-06:00</option>
+                <option value="-5">UTC-05:00</option>
+                <option value="-4">UTC-04:00</option>
+                <option value="-3">UTC-03:00</option>
+                <option value="-2">UTC-02:00</option>
+                <option value="-1">UTC-01:00</option>
+                <option value="0">UTC±00:00</option>
+                <option value="1">UTC+01:00</option>
+                <option value="2">UTC+02:00</option>
+                <option value="3">UTC+03:00</option>
+                <option value="4">UTC+04:00</option>
+                <option value="5">UTC+05:00</option>
+                <option value="6">UTC+06:00</option>
+                <option value="7">UTC+07:00</option>
+                <option value="8" selected>UTC+08:00</option>
+                <option value="9">UTC+09:00</option>
+                <option value="10">UTC+10:00</option>
+                <option value="11">UTC+11:00</option>
+                <option value="12">UTC+12:00</option>
+                <option value="13">UTC+13:00</option>
+                <option value="14">UTC+14:00</option>
+            </select>
+        </div>
+        <div id="timezone-error" class="error-message"></div>
+
+        <label for="date">🔸選擇日期：</label>
+        <div class="flex-row">
+            <input type="date" id="date" required>
+            <button class="inline" onclick="setToday()">📅 今天</button>
+        </div>
+        <div id="date-error" class="error-message"></div>
+
+        <label for="time">🔸輸入時間：<br>
+            <span style="font-size: 0.8em; color: #666;">（請輸入當地時間）</span>
+        </label>
+        <div class="flex-row">
+            <input type="time" id="time" required>
+            <button class="inline" onclick="setNow()">⏱️ 現在</button>
+        </div>
+        <div id="time-error" class="error-message"></div>
+
+        <label for="weather">🔸選擇天氣條件：<br>
+            <span style="font-size: 0.8em; color: #666;">（影響紫外線強度）</span>
+        </label>
+        <select id="weather">
+            <option value="sunny" selected>晴天（雲量佔天空20%以下，陽光直射，影子清晰）</option>
+            <option value="partly_cloudy">多雲（雲量50%左右，能看到太陽輪廓，影子模糊）</option>
+            <option value="cloudy">陰天/陰雨天（雲量80%以上，幾乎無陽光，無影子）</option>
+        </select>
+        <div id="weather-error" class="error-message"></div>
+
+        <label for="quickOutfit">🔸快速穿著預設：</label>
+        <select id="quickOutfit" onchange="applyQuickOutfit()">
+            <option value="custom">⚙️ 自定義</option>
+            <option value="shorts_tshirt_slippers">🩳 短短拖（短袖短褲拖鞋，約 46%）</option>
+            <option value="longsleeve_longpants_shoes">👖 長長鞋（長袖長褲鞋，約 10%）</option>
+        </select>
+
+        <label style="margin-top: 2em;">🔸選擇穿著部位與覆蓋情況：</label>
+        <div class="body-parts-card" id="bodyPartsHeadNeckHands" data-expanded="false">
+            <div class="body-parts-card-header" onclick="toggleBodyPartsCard('bodyPartsHeadNeckHands')">
+                <h3>頭部、脖子、手穿著 <span style="font-size: 0.8em; color: var(--text-light);">(預設無遮蓋)</span></h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="body-parts-content">
+                <label for="head">🔹頭部：</label>
+                <select id="head">
+                    <option value="4" selected>無遮蓋（4%）</option>
+                    <option value="3">安全帽/毛帽（3%）</option>
+                    <option value="2">棒球帽（2%）</option>
+                    <option value="1">牛仔帽（1%）</option>
+                </select>
+                <label for="neck">🔹脖子：</label>
+                <select id="neck">
+                    <option value="2" selected>無遮蓋（2%）</option>
+                    <option value="0">有遮蓋（0%）</option>
+                </select>
+                <label for="hands">🔹手：</label>
+                <select id="hands">
+                    <option value="4" selected>無手套（4%）</option>
+                    <option value="0">有手套（0%）</option>
+                </select>
+            </div>
+        </div>
+        <div class="body-parts-card" id="bodyPartsTorsoLegsFeet" data-expanded="true">
+            <div class="body-parts-card-header" onclick="toggleBodyPartsCard('bodyPartsTorsoLegsFeet')">
+                <h3>上衣、下身、腳穿著</h3>
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <div class="body-parts-content">
+                <label for="torso">🔹身體與手臂：</label>
+                <select id="torso">
+                    <option value="47">無遮蓋（47%）</option>
+                    <option value="42">比基尼上衣/運動內衣（42%）</option>
+                    <option value="18">吊帶（18%）</option>
+                    <option value="10" selected>短袖（10%）</option>
+                    <option value="3">七分袖（3%）</option>
+                    <option value="0">長袖（0%）</option>
+                </select>
+                <label for="legs">🔹腿部：</label>
+                <select id="legs">
+                    <option value="38">比基尼泳褲（38%）</option>
+                    <option value="24">短褲/短裙（24%）</option>
+                    <option value="8">及膝褲/裙（8%）</option>
+                    <option value="0" selected>長褲（0%）</option>
+                </select>
+                <label for="feet">🔹腳：</label>
+                <select id="feet">
+                    <option value="2">無遮蓋（2%）</option>
+                    <option value="1.5">涼鞋/拖鞋（1.5%）</option>
+                    <option value="0" selected>鞋（0%）</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="calculateZenithAngle()"><i class="fas fa-calculator"></i> 計算結果</button>
+
+        <div id="result"></div>
+        <div id="dataCard" class="data-card"></div>
+    </div>
+
+    <script>
+        function saveSelections() {
+            const selects = document.querySelectorAll('.body-parts-card select');
+            selects.forEach(select => {
+                localStorage.setItem(`bodyPart_${select.id}`, select.value);
+            });
+            const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element && element.value) {
+                    localStorage.setItem(`saved_${id}`, element.value);
+                }
+            });
+        }
+
+        function loadSelections() {
+            const selects = document.querySelectorAll('.body-parts-card select');
+            selects.forEach(select => {
+                const savedValue = localStorage.getItem(`bodyPart_${select.id}`);
+                if (savedValue) select.value = savedValue;
+            });
+            const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit'];
+            inputs.forEach(id => {
+                const savedValue = localStorage.getItem(`saved_${id}`);
+                const element = document.getElementById(id);
+                if (savedValue && element) element.value = savedValue;
+            });
+        }
+
+        function setToday() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            saveSelections();
+        }
+
+        function setNow() {
+            const now = new Date();
+            const timeStr = now.toTimeString().slice(0, 5);
+            document.getElementById('time').value = timeStr;
+            saveSelections();
+        }
+
+        function autoDetectLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        const lat = pos.coords.latitude.toFixed(5);
+                        const lon = pos.coords.longitude.toFixed(5);
+                        document.getElementById('lat').value = lat;
+                        document.getElementById('lon').value = lon;
+                        const estimatedOffset = Math.round(lon / 15);
+                        document.getElementById('timezone').value = estimatedOffset;
+                        document.getElementById('timezone-error').innerText = `自動推估時區：UTC${estimatedOffset >= 0 ? '+' : ''}${estimatedOffset}，請確認正確。`;
+                        document.getElementById('timezone-error').classList.add('show');
+                        saveSelections();
+                    },
+                    err => {
+                        document.getElementById('lon-error').innerText = '無法獲取位置，請檢查權限或手動輸入經緯度。';
+                        document.getElementById('lon-error').classList.add('show');
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            } else {
+                document.getElementById('lon-error').innerText = '瀏覽器不支援定位功能。';
+                document.getElementById('lon-error').classList.add('show');
+            }
+        }
+
+        function applyQuickOutfit() {
+            const outfit = document.getElementById('quickOutfit').value;
+            if (outfit === 'custom') return;
+            const settings = {
+                'shorts_tshirt_slippers': { head: '4', neck: '2', hands: '4', torso: '10', legs: '24', feet: '1.5' },
+                'longsleeve_longpants_shoes': { head: '4', neck: '2', hands: '4', torso: '0', legs: '0', feet: '0' }
+            };
+            Object.entries(settings[outfit]).forEach(([part, value]) => {
+                const element = document.getElementById(part);
+                if (element) element.value = value;
+            });
+            const headNeckHandsCard = document.getElementById('bodyPartsHeadNeckHands');
+            headNeckHandsCard.setAttribute('data-expanded', 'true');
+            headNeckHandsCard.querySelector('i').className = 'fas fa-chevron-up';
+            setTimeout(() => {
+                headNeckHandsCard.setAttribute('data-expanded', 'false');
+                headNeckHandsCard.querySelector('i').className = 'fas fa-chevron-down';
+            }, 2000);
+            saveSelections();
+        }
+
+        function toggleBodyPartsCard(cardId) {
+            const card = document.getElementById(cardId);
+            const icon = card.querySelector('.body-parts-card-header i');
+            const isExpanded = card.getAttribute('data-expanded') === 'true';
+            card.setAttribute('data-expanded', !isExpanded);
+            icon.className = `fas fa-chevron-${isExpanded ? 'down' : 'up'}`;
+            localStorage.setItem(`${cardId}Expanded`, !isExpanded);
+        }
+
+        function toggleDataCard() {
+            const dataCard = document.getElementById('dataCard');
+            const icon = document.getElementById('dataCardIcon');
+            const isExpanded = dataCard.getAttribute('data-expanded') === 'true';
+            dataCard.setAttribute('data-expanded', !isExpanded);
+            icon.className = `fas fa-chevron-${isExpanded ? 'down' : 'up'}`;
+        }
+
+        function toggleInfoCard() {
+            const infoCard = document.getElementById('infoCard');
+            const icon = document.getElementById('infoCardIcon');
+            const isExpanded = infoCard.getAttribute('data-expanded') === 'true';
+            infoCard.setAttribute('data-expanded', !isExpanded);
+            icon.className = `fas fa-chevron-${isExpanded ? 'down' : 'up'}`;
+            localStorage.setItem('infoCardExpanded', !isExpanded);
+        }
+
+        function validateInputs() {
+            let isValid = true;
+            const errors = {
+                date: document.getElementById('date-error'),
+                time: document.getElementById('time-error'),
+                timezone: document.getElementById('timezone-error'),
+                lat: document.getElementById('lat-error'),
+                lon: document.getElementById('lon-error'),
+                weather: document.getElementById('weather-error')
+            };
+            Object.values(errors).forEach(error => {
+                error.innerText = '';
+                error.classList.remove('show');
+            });
+
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const timezone = parseFloat(document.getElementById('timezone').value);
+            const lat = parseFloat(document.getElementById('lat').value);
+            const lon = parseFloat(document.getElementById('lon').value);
+            const weather = document.getElementById('weather').value;
+
+            if (!date) {
+                errors.date.innerText = '請選擇日期。';
+                errors.date.classList.add('show');
+                isValid = false;
+            }
+            if (!time) {
+                errors.time.innerText = '請輸入時間。';
+                errors.time.classList.add('show');
+                isValid = false;
+            }
+            if (isNaN(timezone) || timezone < -12 || timezone > 14) {
+                errors.timezone.innerText = '請選擇有效時區（UTC-12 到 UTC+14）。';
+                errors.timezone.classList.add('show');
+                isValid = false;
+            }
+            if (isNaN(lat) || lat < -90 || lat > 90) {
+                errors.lat.innerText = '請輸入有效緯度（-90 到 90）。';
+                errors.lat.classList.add('show');
+                isValid = false;
+            }
+            if (isNaN(lon) || lon < -180 || lon > 180) {
+                errors.lon.innerText = '請輸入有效經度（-180 到 180）。';
+                errors.lon.classList.add('show');
+                isValid = false;
+            }
+            if (!weather) {
+                errors.weather.innerText = '請選擇天氣條件。';
+                errors.weather.classList.add('show');
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        function calculateZenithAngle() {
+            try {
+                if (!validateInputs()) {
+                    document.getElementById('result').innerHTML = '';
+                    document.getElementById('dataCard').innerHTML = '';
+                    return;
+                }
+
+                const dateInput = document.getElementById('date').value;
+                const timeInput = document.getElementById('time').value;
+                const timezoneOffset = parseFloat(document.getElementById('timezone').value);
+                const lat = parseFloat(document.getElementById('lat').value);
+                const lon = parseFloat(document.getElementById('lon').value);
+                const weather = document.getElementById('weather').value;
+
+                const weatherFactors = {
+                    sunny: { factor: 1.0, description: '晴天，紫外線無衰減' },
+                    partly_cloudy: { factor: 0.7, description: '多雲，紫外線減少約 30%' },
+                    cloudy: { factor: 0.3, description: '陰天/陰雨天，紫外線減少約 70%' }
+                };
+                const cloudFactor = weatherFactors[weather].factor;
+                const weatherDescription = weatherFactors[weather].description;
+
+                const [year, month, day] = dateInput.split('-').map(Number);
+                const [hours, minutes] = timeInput.split(':').map(Number);
+                const utcHours = hours - timezoneOffset;
+                const dateObj = new Date(Date.UTC(year, month - 1, day, utcHours, minutes, 0));
+                const sunPos = SunCalc.getPosition(dateObj, lat, lon);
+                const altitude = sunPos.altitude * 180 / Math.PI;
+                const zenithAngle = 90 - altitude;
+                const roundedZenith = Math.round(zenithAngle);
+
+                const uvData = {
+                    70: { sunburn100: 180, vitD10: 200 },
+                    63: { sunburn100: 70, vitD10: 77 },
+                    57: { sunburn100: 60, vitD10: 43 },
+                    53: { sunburn100: 45, vitD10: 30 },
+                    50: { sunburn100: 36, vitD10: 23 },
+                    47: { sunburn100: 30, vitD10: 19 },
+                    42: { sunburn100: 26, vitD10: 15 },
+                    38: { sunburn100: 24, vitD10: 13 },
+                    36: { sunburn100: 22, vitD10: 12 },
+                    32: { sunburn100: 20, vitD10: 11 },
+                    24: { sunburn100: 18, vitD10: 10 },
+                    0: { sunburn100: 12, vitD10: 6.7 }
+                };
+
+                const keys = Object.keys(uvData).map(Number).sort((a, b) => a - b);
+                let lowerKey = keys.find(k => k <= zenithAngle) || keys[0];
+                let upperKey = keys.find(k => k > zenithAngle) || keys[keys.length - 1];
+                let data;
+                if (lowerKey === upperKey || zenithAngle === lowerKey) {
+                    data = uvData[lowerKey];
+                } else {
+                    const fraction = (zenithAngle - lowerKey) / (upperKey - lowerKey);
+                    data = {
+                        sunburn100: uvData[lowerKey].sunburn100 + fraction * (uvData[upperKey].sunburn100 - uvData[lowerKey].sunburn100),
+                        vitD10: uvData[lowerKey].vitD10 + fraction * (uvData[upperKey].vitD10 - uvData[lowerKey].vitD10)
+                    };
+                }
+
+                const totalBSA = ['head', 'neck', 'hands', 'torso', 'legs', 'feet']
+                    .map(id => parseFloat(document.getElementById(id).value))
+                    .reduce((a, b) => a + b, 0);
+
+                let vitDTime = totalBSA <= 0 ? null : data.vitD10 * (10 / totalBSA) * 1.5 / cloudFactor;
+                let displayMinutesFor4000 = totalBSA <= 0 ? '無法計算（無曝露面積）' : Math.round(vitDTime * 4);
+                let sunburnTime = data.sunburn100 * 1.5 / cloudFactor;
+
+                const dataCardHTML = `
+                    <div class="data-card-header" onclick="toggleDataCard()">
+                        <h3>天頂角數據表</h3>
+                        <i class="fas fa-chevron-down" id="dataCardIcon"></i>
+                    </div>
+                    <div class="data-card-content">
+                        <div class="table-note">*1.5倍 / 單位分鐘，基於${weatherDescription}</div>
+                        <table class="data-table">
+                            <tr>
+                                <th>天頂角</th>
+                                <th>曬傷時間</th>
+                                <th>維他命D 1000 IU (10%)</th>
+                                <th>維他命D 4000 IU (40%)</th>
+                            </tr>
+                            ${Object.keys(uvData).sort((a, b) => b - a).map(key => `
+                                <tr>
+                                    <td>${key}°</td>
+                                    <td>${Math.round(uvData[key].sunburn100 * 1.5 / cloudFactor)}</td>
+                                    <td>${Number((uvData[key].vitD10 * 1.5 / cloudFactor).toFixed(1))}</td>
+                                    <td>${Number((uvData[key].vitD10 * 1.5 * 4 / cloudFactor).toFixed(1))}</td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+                `;
+
+                let resultHTML;
+                let resultClass = '';
+                if (zenithAngle >= 90) {
+                    resultClass = '';
+                    resultHTML = `
+                        <div class="result-zenith-angle">
+                            <strong>太陽高度角：</strong> ${altitude.toFixed(1)}° · 
+                            <strong>天頂角：</strong> 約 ${roundedZenith}°
+                        </div>
+						 <p style="text-align: center; color: #46A3FF">${weatherDescription}
+						
+                        <div class="result-main-info">
+                            <div class="result-item">
+                                <span class="result-item-icon"><i class="fas fa-person"></i></span>
+                                <span class="label">曝露面積：</span>
+                                <span class="value">${totalBSA.toFixed(1)}%</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-item-icon"><i class="fas fa-sun"></i></span>
+                                <span class="label">建議維他命D曝曬時間：</span>
+                                <span class="value vitd-time">明日請早</span>
+                            </div>
+                            <div class="sub-description">（太陽尚未升起，無法合成維他命 D）</div>
+                            <div class="result-item">
+                                <span class="result-item-icon"><i class="fas fa-fire"></i></span>
+                                <span class="label">曬傷時間：</span>
+                                <span class="value sunburn-time">天黑啦</span>
+                            </div>
+                            <div class="sub-description">（太陽在地平線以下，無曬傷風險）</div>
+                        </div>
+                    `;
+                } else {
+                    if (sunburnTime <= 30) {
+                        resultClass = 'danger';
+                    } else if (sunburnTime <= 60) {
+                        resultClass = 'warning';
+                    }
+                    resultHTML = `
+                        <div class="result-zenith-angle">
+                            <strong>太陽高度角：</strong> ${altitude.toFixed(1)}° · 
+                            <strong>天頂角：</strong> 約 ${roundedZenith}°
+                        </div>
+                       <p style="text-align: center; color: #46A3FF">${weatherDescription}
+                        <div class="result-main-info">
+                            <div class="result-item">
+                                <span class="result-item-icon"><i class="fas fa-person"></i></span>
+                                <span class="label">曝露身表面積：</span>
+                                <span class="value">${totalBSA.toFixed(1)}%</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-item-icon"><i class="fas fa-sun"></i></span>
+                                <span class="label">建議維他命D曝曬時間：</span>
+                                <span class="value vitd-time">${displayMinutesFor4000} 分鐘</span>
+                            </div>
+                            <div class="sub-description">（可吸收約 4000 IU 維他命 D）</div>
+                            <div class="result-item">
+                                <span class="result-item-icon"><i class="fas fa-fire"></i></span>
+                                <span class="label">曬傷時間：</span>
+                                <span class="value sunburn-time">${Math.round(sunburnTime)} 分鐘</span>
+                            </div>
+                            <div class="sub-description">（曝曬部位可能開始曬傷）</div>
+                        </div>
+                    `;
+                }
+
+                document.getElementById('result').className = `result ${resultClass}`;
+                document.getElementById('result').innerHTML = resultHTML;
+                document.getElementById('dataCard').innerHTML = dataCardHTML;
+                document.getElementById('dataCard').setAttribute('data-expanded', 'true');
+                document.getElementById('dataCardIcon').className = 'fas fa-chevron-up';
+            } catch (error) {
+                console.error('Error in calculateZenithAngle:', error);
+                document.getElementById('result').innerHTML = '<div class="error-message show">計算錯誤，請檢查輸入或資料。';
+                document.getElementById('dataCard').innerHTML = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSelections();
+            if (!document.getElementById('date').value) setToday();
+            if (!document.getElementById('time').value) setNow();
+            const userTimezoneOffset = -(new Date().getTimezoneOffset() / 60);
+            document.getElementById('timezone').value = userTimezoneOffset;
+            applyQuickOutfit();
+
+            const infoCard = document.getElementById('infoCard');
+            const infoCardIcon = document.getElementById('infoCardIcon');
+            const savedInfoCardState = localStorage.getItem('infoCardExpanded');
+            if (savedInfoCardState === null) {
+                infoCard.setAttribute('data-expanded', 'true');
+                infoCardIcon.className = 'fas fa-chevron-up';
+            } else {
+                infoCard.setAttribute('data-expanded', savedInfoCardState);
+                infoCardIcon.className = `fas fa-chevron-${savedInfoCardState === 'true' ? 'up' : 'down'}`;
+            }
+
+            const headNeckHandsCard = document.getElementById('bodyPartsHeadNeckHands');
+            const torsoLegsFeetCard = document.getElementById('bodyPartsTorsoLegsFeet');
+            const savedHeadNeckHandsState = localStorage.getItem('bodyPartsHeadNeckHandsExpanded');
+            const savedTorsoLegsFeetState = localStorage.getItem('bodyPartsTorsoLegsFeetExpanded');
+            headNeckHandsCard.setAttribute('data-expanded', savedHeadNeckHandsState || 'false');
+            headNeckHandsCard.querySelector('i').className = `fas fa-chevron-${savedHeadNeckHandsState === 'true' ? 'up' : 'down'}`;
+            torsoLegsFeetCard.setAttribute('data-expanded', savedTorsoLegsFeetState || 'true');
+            torsoLegsFeetCard.querySelector('i').className = `fas fa-chevron-${savedTorsoLegsFeetState === 'false' ? 'down' : 'up'}`;
+
+            const inputs = ['lat', 'lon', 'date', 'time', 'weather', 'quickOutfit'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', saveSelections);
+                }
+            });
+
+            document.querySelectorAll('.body-parts-card select').forEach(select => {
+                select.addEventListener('change', saveSelections);
+            });
+        });
+    </script>
+</body>
+</html>
