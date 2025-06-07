@@ -7,8 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- iOS Safari 主畫面 icon -->
-<link rel="apple-touch-icon" href="icon180.png">
+    <!-- iOS Safari 主畫面 icon -->
+    <link rel="apple-touch-icon" href="icon180.png">
     <link rel="icon" type="image/png" sizes="192x192" href="uvicon192.png">
     <meta name="theme-color" content="#42a5f5">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -81,6 +81,16 @@
             margin-top: -0.5em;
             margin-bottom: 1.5em;
             font-size: 0.95em;
+        }
+
+        .privacy-notice {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9em;
+            margin-bottom: 1.5em;
+            padding: 0.5em 1em;
+            background-color: #f0f8ff;
+            border-radius: 8px;
         }
 
         label {
@@ -293,7 +303,7 @@
 
         .result-item span.label {
             font-weight: bold;
-            flex-shrink:  0;
+            flex-shrink: 0;
             display: inline-flex;
             align-items: center;
         }
@@ -489,6 +499,9 @@
     <div class="container">
         <h2>科學曬太陽</h2>
         <p class="subtitle">資料來自 MDJJ猛爹將軍，推薦YT影片 <a href="https://youtu.be/K0wp58UI8sE?si=_XJlQx64gIJDBQZv" target="_blank">點我觀看</a></p>
+        <div class="privacy-notice">
+            隱私聲明：所有輸入數據僅在您的設備上本地處理，不會上傳或記錄任何位置資訊。
+        </div>
 
         <div class="info-card" id="infoCard" data-expanded="false">
             <div class="info-card-header" onclick="toggleInfoCard()">
@@ -497,11 +510,11 @@
             </div>
             <div class="info-card-content">
                 <p>
-                    - 建議中午 12 點附近曬太陽，UVB 相對高(棒棒)，UVA相對低(皮膚老化)。<br>
+                    - 建議中午 12 點附近曬太陽，UVB(棒棒)相對高，UVA(皮膚老化)相對低。<br>
                     - 在曬傷之前曬夠維生素 D 就對了。<br>
                     - 輸入經緯度後，後台會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a>
                     資料算出天頂角。<br>
-                    - 「天頂角數據表」來自MDJJ猛爹將軍影片中的研究報告，根據亞洲人膚色調整過（1.5 倍耐受性）。不在數據表中的天頂角度數由 AI
+                    - 「天頂角數據表」來自MDJJ猛爹將軍影片中的研究報告，根據亞洲人膚色調整過（1.5 倍耐受性）。不在數據表中的天頂角由 AI
                     用線性插值估算，可作參考。<br>
                     - 室內、車內：普通窗戶玻璃幾乎完全阻擋 UVB，但允許 50%–75% 的 UVA 通過，即使在陰天（雲量高），UVA
                     仍能透過雲層和窗戶到達室內，尤其在窗邊 1–2 公尺內（Kahan et al., 2019）。AI說的，可作參考。
@@ -509,23 +522,18 @@
             </div>
         </div>
 
-        <label for="lat">🔸輸入緯度（正為北緯）：<br>
-            <a href="https://www.google.com/maps/" target="_blank" title="在新分頁打開 Google 地圖">
-                <i class="fas fa-question-circle" style="color: #4A90E2; font-size: 0.8em; margin-left: 0.3em; cursor: pointer;"></i>
-            </a>
-            <span style="font-size: 0.8em; color: #666;">（按問號再按紅色圖釘查經緯度）</span>
-        </label>
-        <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required>
+        <label for="lat">🔸輸入緯度（正為北緯）：</label>
+        <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required inputmode="decimal">
         <div id="lat-error" class="error-message"></div>
 
         <label for="lon">🔸輸入經度（正為東經）：</label>
         <div class="flex-row">
-            <input type="number" step="any" id="lon" placeholder="例如：121.565" min="-180" max="180" required>
+            <input type="number" step="any" id="lon" placeholder="例如：121.565" min="-180" max="180" required inputmode="decimal">
             <button class="inline" onclick="autoDetectLocation()">📍 自動定位</button>
         </div>
         <div id="lon-error" class="error-message"></div>
 
-       <label for="timezone">🔸選擇時區：<br>
+        <label for="timezone">🔸選擇時區：<br>
             <span style="font-size: 0.8em; color: #666;">（自動定位由經度推估時區，請注意夏令時間）</span>
         </label>
         <div class="flex-row">
@@ -932,7 +940,7 @@
                             <strong>太陽高度角：</strong> ${altitude.toFixed(1)}° · 
                             <strong>天頂角：</strong> 約 ${roundedZenith}°
                         </div>
-						 <p style="text-align: center; color: #46A3FF">${weatherDescription}
+                        <p style="text-align: center; color: #46A3FF">${weatherDescription}
                         <div class="result-main-info">
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-person"></i></span>
