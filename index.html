@@ -512,9 +512,9 @@
                 <p>
                     - 建議中午 12 點附近曬太陽，UVB(棒棒)相對高，UVA(皮膚老化)相對低。<br>
                     - 在曬傷之前曬夠維生素 D 就對了。<br>
-                    - 輸入經緯度後，後台會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a>
-                    資料算出天頂角。<br>
-                    - 「天頂角數據表」來自MDJJ猛爹將軍影片中的研究報告，根據亞洲人膚色調整過（1.5 倍耐受性）。<br>
+                    - 輸入經緯度後，會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a>
+                    資料算出天頂角。您也可以利用此網址知道各地緯度、經度<br>
+                    - 「天頂角數據表」來自YT影片，根據亞洲人膚色調整過（1.5 倍耐受性）。<br>
 					- 不在數據表中的天頂角由 AI用線性插值估算，可作參考。<br>
 
                 </p>
@@ -591,7 +591,7 @@
         <select id="weather">
             <option value="sunny" selected>晴天（雲量佔天空20%以下，陽光直射，影子清晰）</option>
             <option value="partly_cloudy">多雲（雲量50%左右，能看到太陽輪廓，影子模糊）</option>
-            <option value="cloudy">陰天/陰雨天（雲量80%以上，幾乎無陽光，無影子）</option>
+            <option value="cloudy">陰天/陰雨天（雲量80%以上，幾乎看不到太陽，無影子）</option>
         </select>
         <div id="weather-error" class="error-message"></div>
 
@@ -638,7 +638,7 @@
                 <select id="torso">
                     <option value="47">無遮蓋（47%）</option>
                     <option value="42">比基尼上衣/運動內衣（42%）</option>
-                    <option value="18">吊帶（18%）</option>
+                    <option value="18">吊嘎（18%）</option>
                     <option value="10" selected>短袖（10%）</option>
                     <option value="3">七分袖（3%）</option>
                     <option value="0">長袖（0%）</option>
@@ -949,7 +949,7 @@
                             </div>
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-sun"></i></span>
-                                <span class="label">建議曝曬時間：</span>
+                                <span class="label">建議時間：</span>
                                 <span class="value vitd-time">明日請早</span>
                             </div>
                             <div class="sub-description">（太陽尚未升起，無法合成維他命 D）</div>
