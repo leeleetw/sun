@@ -7,7 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- iOS Safari 主畫面 icon -->
     <link rel="apple-touch-icon" href="uvicon180.png">
     <link rel="icon" type="image/png" sizes="192x192" href="uvicon192.png">
     <meta name="theme-color" content="#42a5f5">
@@ -15,7 +14,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="科學曬太陽">
     <style>
-        :root {
+     :root {
             --primary-color: #4A90E2;
             --secondary-color: #DAA520;
             --tertiary-color: #F8C300;
@@ -463,6 +462,34 @@
             margin: 0;
         }
 
+        /* 語言切換按鈕 */
+        .lang-switcher {
+            position: absolute;
+            top: 24px;
+            right: 36px;
+            z-index: 99;
+            font-size: 1em;
+            background: #f7f7f7;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            padding: 0.3em 1.2em 0.3em 0.7em;
+            cursor: pointer;
+            color: #444;
+            box-shadow: 0 1px 6px var(--shadow-light);
+            transition: background 0.2s;
+            min-width: 70px;
+            height: 2.3em;
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+        }
+        .lang-switcher:hover {
+            background: #e3eaf2;
+        }
+        @media (max-width:600px) {
+            .lang-switcher { right: 2vw; top: 13px; font-size:0.95em;}
+        }
+
         @media (max-width: 600px) {
             body { padding: 0.8em; }
             .container { padding: 1.5em; margin: 0.8em auto; }
@@ -496,19 +523,23 @@
     </style>
 </head>
 <body>
+    <div class="lang-switcher" id="langSwitcher">
+        <i class="fas fa-globe"></i>
+        <span id="langSwitcherText">English</span>
+    </div>
     <div class="container">
-        <h2>科學曬太陽</h2>
-        <p class="subtitle">資料來自 MDJJ猛爹將軍，推薦YT影片 <a href="https://youtu.be/K0wp58UI8sE?si=_XJlQx64gIJDBQZv" target="_blank">點我觀看</a></p>
-        <div class="privacy-notice">
+        <h2 id="title">科學曬太陽</h2>
+        <p class="subtitle" id="subtitle">資料來自 MDJJ猛爹將軍，推薦YT影片 <a href="https://youtu.be/K0wp58UI8sE?si=_XJlQx64gIJDBQZv" target="_blank">點我觀看</a></p>
+        <div class="privacy-notice" id="privacyNotice">
             隱私聲明：所有輸入數據僅在您的設備上本地處理，不會上傳或記錄任何位置資訊。
         </div>
 
         <div class="info-card" id="infoCard" data-expanded="false">
             <div class="info-card-header" onclick="toggleInfoCard()">
-                <h3>使用說明</h3>
+                <h3 id="usageTitle">使用說明</h3>
                 <i class="fas fa-chevron-down" id="infoCardIcon"></i>
             </div>
-            <div class="info-card-content">
+            <div class="info-card-content" id="usageContent">
                 <p>
                     - 建議中午 12 點附近曬太陽，UVB(棒棒)相對高，UVA(皮膚老化)相對低。<br>
                     - 在曬傷之前曬夠維生素 D 就對了。<br>
@@ -520,71 +551,71 @@
             </div>
         </div>
 
-        <label for="lat">🔸輸入緯度（正為北緯）：</label>
+        <label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
         <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required inputmode="decimal">
         <div id="lat-error" class="error-message"></div>
 
-        <label for="lon">🔸輸入經度（正為東經）：</label>
+        <label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
         <div class="flex-row">
             <input type="number" step="any" id="lon" placeholder="例如：121.565" min="-180" max="180" required inputmode="decimal">
-            <button class="inline" onclick="autoDetectLocation()">📍 自動定位</button>
+            <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
         </div>
         <div id="lon-error" class="error-message"></div>
 
-        <label for="timezone">🔸選擇時區：<br>
-            <span style="font-size: 0.8em; color: #666;">（自動定位由經度推時區，夏令時間可能UTC+1或+2）</span>
+        <label for="timezone" id="labelTimezone">🔸選擇時區：<br>
+            <span id="labelTimezoneNote" style="font-size: 0.8em; color: #666;">（自動定位由經度推時區，夏令時間可能UTC+1或+2）</span>
         </label>
         <div class="flex-row">
-<select id="timezone">
-    <option value="-12">UTC-12:00（無人區）</option>
-    <option value="-11">UTC-11:00（美屬薩摩亞）</option>
-    <option value="-10">UTC-10:00（夏威夷）</option>
-    <option value="-9">UTC-09:00（阿拉斯加）</option>
-    <option value="-8">UTC-08:00（美西／洛杉磯）</option>
-    <option value="-7">UTC-07:00（美國丹佛／山區時間）</option>
-    <option value="-6">UTC-06:00（墨西哥／芝加哥）</option>
-    <option value="-5">UTC-05:00（美東／紐約）</option>
-    <option value="-4">UTC-04:00（大西洋時間）</option>
-    <option value="-3">UTC-03:00（阿根廷／巴西東岸）</option>
-    <option value="-2">UTC-02:00（南大西洋）</option>
-    <option value="-1">UTC-01:00（亞速群島）</option>
-    <option value="0">UTC±00:00（倫敦／格林威治）</option>
-    <option value="1">UTC+01:00（巴黎／柏林）</option>
-    <option value="2">UTC+02:00（希臘／南非）</option>
-    <option value="3">UTC+03:00（莫斯科／沙烏地）</option>
-    <option value="4">UTC+04:00（杜拜／高加索）</option>
-    <option value="5">UTC+05:00（巴基斯坦）</option>
-    <option value="6">UTC+06:00（孟加拉）</option>
-    <option value="7">UTC+07:00（泰國／越南）</option>
-    <option value="8" selected>UTC+08:00（台灣）</option>
-    <option value="9">UTC+09:00（日本／韓國）</option>
-    <option value="10">UTC+10:00（雪梨／布里斯本（澳東））</option>
-    <option value="11">UTC+11:00（所羅門群島）</option>
-    <option value="12">UTC+12:00（紐西蘭）</option>
-    <option value="13">UTC+13:00（紐西蘭極東部）</option>
-    <option value="14">UTC+14:00（基里巴斯）</option>
-</select>
+            <select id="timezone">
+                <option value="-12">UTC-12:00（無人區）</option>
+                <option value="-11">UTC-11:00（美屬薩摩亞）</option>
+                <option value="-10">UTC-10:00（夏威夷）</option>
+                <option value="-9">UTC-09:00（阿拉斯加）</option>
+                <option value="-8">UTC-08:00（美西／洛杉磯）</option>
+                <option value="-7">UTC-07:00（美國丹佛／山區時間）</option>
+                <option value="-6">UTC-06:00（墨西哥／芝加哥）</option>
+                <option value="-5">UTC-05:00（美東／紐約）</option>
+                <option value="-4">UTC-04:00（大西洋時間）</option>
+                <option value="-3">UTC-03:00（阿根廷／巴西東岸）</option>
+                <option value="-2">UTC-02:00（南大西洋）</option>
+                <option value="-1">UTC-01:00（亞速群島）</option>
+                <option value="0">UTC±00:00（倫敦／格林威治）</option>
+                <option value="1">UTC+01:00（巴黎／柏林）</option>
+                <option value="2">UTC+02:00（希臘／南非）</option>
+                <option value="3">UTC+03:00（莫斯科／沙烏地）</option>
+                <option value="4">UTC+04:00（杜拜／高加索）</option>
+                <option value="5">UTC+05:00（巴基斯坦）</option>
+                <option value="6">UTC+06:00（孟加拉）</option>
+                <option value="7">UTC+07:00（泰國／越南）</option>
+                <option value="8" selected>UTC+08:00（台灣）</option>
+                <option value="9">UTC+09:00（日本／韓國）</option>
+                <option value="10">UTC+10:00（雪梨／布里斯本（澳東））</option>
+                <option value="11">UTC+11:00（所羅門群島）</option>
+                <option value="12">UTC+12:00（紐西蘭）</option>
+                <option value="13">UTC+13:00（紐西蘭極東部）</option>
+                <option value="14">UTC+14:00（基里巴斯）</option>
+            </select>
         </div>
         <div id="timezone-error" class="error-message"></div>
 
-        <label for="date">🔸選擇日期：</label>
+        <label for="date" id="labelDate">🔸選擇日期：</label>
         <div class="flex-row">
             <input type="date" id="date" required>
-            <button class="inline" onclick="setToday()">📅 今天</button>
+            <button class="inline" onclick="setToday()" id="todayBtn">📅 今天</button>
         </div>
         <div id="date-error" class="error-message"></div>
 
-        <label for="time">🔸輸入時間：<br>
-            <span style="font-size: 0.8em; color: #666;">（請輸入當地時間）</span>
+        <label for="time" id="labelTime">🔸輸入時間：<br>
+            <span id="labelTimeNote" style="font-size: 0.8em; color: #666;">（請輸入當地時間）</span>
         </label>
         <div class="flex-row">
             <input type="time" id="time" required>
-            <button class="inline" onclick="setNow()">⏱️ 現在</button>
+            <button class="inline" onclick="setNow()" id="nowBtn">⏱️ 現在</button>
         </div>
         <div id="time-error" class="error-message"></div>
 
-        <label for="weather">🔸選擇天氣條件：<br>
-            <span style="font-size: 0.8em; color: #666;">（影響紫外線強度）</span>
+        <label for="weather" id="labelWeather">🔸選擇天氣條件：<br>
+            <span id="labelWeatherNote" style="font-size: 0.8em; color: #666;">（影響紫外線強度）</span>
         </label>
         <select id="weather">
             <option value="sunny" selected>晴天（雲量佔天空20%以下，陽光直射，影子清晰）</option>
@@ -593,33 +624,46 @@
         </select>
         <div id="weather-error" class="error-message"></div>
 
-        <label for="quickOutfit">🔸快速穿著預設：</label>
+        <!-- 新增膚色自訂選項 -->
+        <label for="skinType" id="labelSkinType">🔸膚色耐受性：</label>
+        <div class="flex-row">
+            <select id="skinType" onchange="handleSkinTypeChange()">
+                <option value="1.0">白人（1倍）</option>
+                <option value="1.5" selected>亞洲人（1.5倍）</option>
+                <option value="2.0">毛利人（2倍）</option>
+                <option value="5.0">黑人（幾乎黑，5倍）</option>
+                <option value="custom">自訂</option>
+            </select>
+            <input type="number" id="customSkinType" step="0.1" min="0.1" max="5.0" style="display:none;width:110px;" placeholder="0.1-5倍">
+        </div>
+
+        <label for="quickOutfit" id="labelQuickOutfit">🔸快速穿著預設：</label>
         <select id="quickOutfit" onchange="applyQuickOutfit()">
             <option value="custom">⚙️ 自定義</option>
             <option value="shorts_tshirt_slippers">🩳 短短拖 (45.5%）</option>
             <option value="longsleeve_longpants_shoes">👖 長長鞋（10%）</option>
         </select>
 
-        <label style="margin-top: 2em;">🔸選擇穿著部位與覆蓋情況：</label>
+        <label style="margin-top: 2em;" id="labelBodyParts">🔸選擇穿著部位與覆蓋情況：</label>
         <div class="body-parts-card" id="bodyPartsHeadNeckHands" data-expanded="false">
             <div class="body-parts-card-header" onclick="toggleBodyPartsCard('bodyPartsHeadNeckHands')">
-                <h3>頭部、脖子、手穿著 <span style="font-size: 0.8em; color: var(--text-light);">(預設無遮蓋)</span></h3>
+                <h3 id="headNeckHandsTitle">頭部、脖子、手穿著 <span style="font-size: 0.8em; color: var(--text-light);">(預設無遮蓋)</span></h3>
                 <i class="fas fa-chevron-down"></i>
             </div>
             <div class="body-parts-content">
-                <label for="head">🔹頭部：</label>
+                <label for="head" id="labelHead">🔹頭部：</label>
                 <select id="head">
                     <option value="4" selected>無遮蓋（4%）</option>
                     <option value="3">安全帽/毛帽（3%）</option>
                     <option value="2">棒球帽（2%）</option>
                     <option value="1">牛仔帽（1%）</option>
                 </select>
-                <label for="neck">🔹脖子：</label>
+                <label for="neck" id="labelNeck">🔹脖子：</label>
                 <select id="neck">
                     <option value="2" selected>無遮蓋（2%）</option>
                     <option value="0">有遮蓋（0%）</option>
                 </select>
-                <label for="hands">🔹手：</label>
+                <label for="hands" id="labelHands">🔹手：</label>
                 <select id="hands">
                     <option value="4" selected>無遮蓋（4%）</option>
                     <option value="0">有遮蓋（0%）</option>
@@ -628,11 +672,11 @@
         </div>
         <div class="body-parts-card" id="bodyPartsTorsoLegsFeet" data-expanded="true">
             <div class="body-parts-card-header" onclick="toggleBodyPartsCard('bodyPartsTorsoLegsFeet')">
-                <h3>上衣、下身、腳穿著</h3>
+                <h3 id="torsoLegsFeetTitle">上衣、下身、腳穿著</h3>
                 <i class="fas fa-chevron-up"></i>
             </div>
             <div class="body-parts-content">
-                <label for="torso">🔹上衣：</label>
+                <label for="torso" id="labelTorso">🔹上衣：</label>
                 <select id="torso">
                     <option value="47">無遮蓋（47%）</option>
                     <option value="42">比基尼上衣/運動內衣（42%）</option>
@@ -641,14 +685,14 @@
                     <option value="3">七分袖（3%）</option>
                     <option value="0">長袖（0%）</option>
                 </select>
-                <label for="legs">🔹下身：</label>
+                <label for="legs" id="labelLegs">🔹下身：</label>
                 <select id="legs">
                     <option value="38">比基尼泳褲（38%）</option>
                     <option value="24">短褲/短裙（24%）</option>
                     <option value="8">及膝褲/裙（8%）</option>
                     <option value="0" selected>長褲（0%）</option>
                 </select>
-                <label for="feet">🔹腳：</label>
+                <label for="feet" id="labelFeet">🔹腳：</label>
                 <select id="feet">
                     <option value="2">無遮蓋（2%）</option>
                     <option value="1.5">涼鞋/拖鞋（1.5%）</option>
@@ -657,25 +701,344 @@
             </div>
         </div>
 
-        <button onclick="calculateZenithAngle()"><i class="fas fa-calculator"></i> 計算結果</button>
+        <button onclick="calculateZenithAngle()" id="calcBtn"><i class="fas fa-calculator"></i> 計算結果</button>
 
         <div id="result"></div>
         <div id="dataCard" class="data-card" data-expanded="false"></div>
     </div>
-
     <script>
+        // 修正：當找不到元素時不報錯
+function safeSetHTML(id, html) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+}
+function safeSetText(id, txt) {
+    var el = document.getElementById(id);
+    if (el) el.innerText = txt;
+}
+function safeSetOption(selector, html) {
+    var el = document.querySelector(selector);
+    if (el) el.innerHTML = html;
+}
+
+// 時區清單
+const timezones = [
+    {value: -12, zh: 'UTC-12:00（無人區）', en: 'UTC-12:00 (Uninhabited)'},
+    {value: -11, zh: 'UTC-11:00（美屬薩摩亞）', en: 'UTC-11:00 (American Samoa)'},
+    {value: -10, zh: 'UTC-10:00（夏威夷）', en: 'UTC-10:00 (Hawaii)'},
+    {value: -9, zh: 'UTC-09:00（阿拉斯加）', en: 'UTC-09:00 (Alaska)'},
+    {value: -8, zh: 'UTC-08:00（美西／洛杉磯）', en: 'UTC-08:00 (US West/Los Angeles)'},
+    {value: -7, zh: 'UTC-07:00（丹佛/山區）', en: 'UTC-07:00 (Denver/Mountain US)'},
+    {value: -6, zh: 'UTC-06:00（墨西哥/芝加哥）', en: 'UTC-06:00 (Mexico/Chicago)'},
+    {value: -5, zh: 'UTC-05:00（美東/紐約）', en: 'UTC-05:00 (US East/New York)'},
+    {value: -4, zh: 'UTC-04:00（大西洋時間）', en: 'UTC-04:00 (Atlantic Time)'},
+    {value: -3, zh: 'UTC-03:00（阿根廷/巴西東岸）', en: 'UTC-03:00 (Argentina/Brazil East)'},
+    {value: -2, zh: 'UTC-02:00（南大西洋）', en: 'UTC-02:00 (South Atlantic)'},
+    {value: -1, zh: 'UTC-01:00（亞速群島）', en: 'UTC-01:00 (Azores)'},
+    {value: 0, zh: 'UTC±00:00（倫敦/格林威治）', en: 'UTC±00:00 (London/Greenwich)'},
+    {value: 1, zh: 'UTC+01:00（巴黎/柏林）', en: 'UTC+01:00 (Paris/Berlin)'},
+    {value: 2, zh: 'UTC+02:00（希臘/南非）', en: 'UTC+02:00 (Greece/South Africa)'},
+    {value: 3, zh: 'UTC+03:00（莫斯科/沙烏地）', en: 'UTC+03:00 (Moscow/Saudi Arabia)'},
+    {value: 4, zh: 'UTC+04:00（杜拜/高加索）', en: 'UTC+04:00 (Dubai/Caucasus)'},
+    {value: 5, zh: 'UTC+05:00（巴基斯坦）', en: 'UTC+05:00 (Pakistan)'},
+    {value: 6, zh: 'UTC+06:00（孟加拉）', en: 'UTC+06:00 (Bangladesh)'},
+    {value: 7, zh: 'UTC+07:00（泰國/越南）', en: 'UTC+07:00 (Thailand/Vietnam)'},
+    {value: 8, zh: 'UTC+08:00（台灣）', en: 'UTC+08:00 (Taiwan)'},
+    {value: 9, zh: 'UTC+09:00（日本/韓國）', en: 'UTC+09:00 (Japan/Korea)'},
+    {value: 10, zh: 'UTC+10:00（雪梨/澳東）', en: 'UTC+10:00 (Sydney/Eastern Australia)'},
+    {value: 11, zh: 'UTC+11:00（所羅門群島）', en: 'UTC+11:00 (Solomon Islands)'},
+    {value: 12, zh: 'UTC+12:00（紐西蘭）', en: 'UTC+12:00 (New Zealand)'},
+    {value: 13, zh: 'UTC+13:00（紐西蘭極東部）', en: 'UTC+13:00 (NZ Far East)'},
+    {value: 14, zh: 'UTC+14:00（基里巴斯）', en: 'UTC+14:00 (Kiribati)'}
+];
+
+// 各部位選項
+const bodyPartOptions = {
+  head: [
+    {value: "4", zh: "無遮蓋（4%）", en: "Uncovered (4%)"},
+    {value: "3", zh: "安全帽/毛帽（3%）", en: "Helmet/Beanie (3%)"},
+    {value: "2", zh: "棒球帽（2%）", en: "Baseball Cap (2%)"},
+    {value: "1", zh: "牛仔帽（1%）", en: "Cowboy Hat (1%)"}
+  ],
+  neck: [
+    {value: "2", zh: "無遮蓋（2%）", en: "Uncovered (2%)"},
+    {value: "0", zh: "有遮蓋（0%）", en: "Covered (0%)"}
+  ],
+  hands: [
+    {value: "4", zh: "無遮蓋（4%）", en: "Uncovered (4%)"},
+    {value: "0", zh: "有遮蓋（0%）", en: "Covered (0%)"}
+  ],
+  torso: [
+    {value: "47", zh: "無遮蓋（47%）", en: "Uncovered (47%)"},
+    {value: "42", zh: "比基尼上衣/運動內衣（42%）", en: "Bikini/Sports Bra (42%)"},
+    {value: "18", zh: "吊嘎（18%）", en: "Tank Top (18%)"},
+    {value: "10", zh: "短袖（10%）", en: "Short Sleeves (10%)"},
+    {value: "3", zh: "七分袖（3%）", en: "3/4 Sleeves (3%)"},
+    {value: "0", zh: "長袖（0%）", en: "Long Sleeves (0%)"}
+  ],
+  legs: [
+    {value: "38", zh: "比基尼泳褲（38%）", en: "Bikini Briefs (38%)"},
+    {value: "24", zh: "短褲/短裙（24%）", en: "Shorts/Skirt (24%)"},
+    {value: "8", zh: "及膝褲/裙（8%）", en: "Knee-length Shorts/Skirt (8%)"},
+    {value: "0", zh: "長褲（0%）", en: "Long Pants (0%)"}
+  ],
+  feet: [
+    {value: "2", zh: "無遮蓋（2%）", en: "Uncovered (2%)"},
+    {value: "1.5", zh: "涼鞋/拖鞋（1.5%）", en: "Sandals/Slippers (1.5%)"},
+    {value: "0", zh: "鞋（0%）", en: "Shoes (0%)"}
+  ]
+};
+
+// 膚色耐受性(皮膚型)選項，顯示倍數，英文正常用語
+const skinTypeOptions = [
+  {value: "1.0", zh: "⚪非常敏感 I型 白皙/易曬傷（1倍）", en: "⚪Very sensitive (Type I,pale/white skin 1x)"},
+  {value: "1.5", zh: "🟡敏感 II/III型 亞洲人等（1.5倍）", en: "🟡Sensitive (Type II/III,light/Asian skin 1.5x)"},
+  {value: "2.0", zh: "🟤耐受 IV型 深膚色/毛利人（2倍）", en: "🟤Tolerant (Type IV,tan/Maori 2x)"},
+  {value: "5.0", zh: "⚫高度耐受 V/VI型 極黑膚色（5倍）", en: "⚫Highly tolerant (Type V/VI,very dark/black skin 5x)"},
+  {value: "custom", zh: "⚪自訂", en: "⚪Custom"}
+];
+
+// 天氣選單的對應資料
+const weatherOptions = [
+    { value: "sunny", zh: "☀️晴天（雲量佔天空20%以下，陽光直射，影子清晰）", en: "☀️Sunny (cloud < 20%, direct sun, sharp shadow)" },
+    { value: "partly_cloudy", zh: "⛅多雲（雲量50%左右，能看到太陽輪廓，影子模糊）", en: "⛅Partly cloudy (about 50% cloud, sun visible, blurry shadow)" },
+    { value: "cloudy", zh: "☁️陰天/🌧️陰雨天（雲量80%以上，幾乎看不到太陽，無影子）", en: "☁️Cloudy/🌧️rainy (cloud > 80%, sun invisible, no shadow)" }
+];
+        // 語言包
+        const langDict = {
+            'zh-Hant': {
+                title: '科學曬太陽',
+                subtitle: '資料來自 MDJJ猛爹將軍，推薦YT影片 <a href="https://youtu.be/K0wp58UI8sE?si=_XJlQx64gIJDBQZv" target="_blank">點我觀看</a>',
+                privacy: '隱私聲明：所有輸入數據僅在您的設備上本地處理，不會上傳或記錄任何位置資訊。',
+                usageTitle: '使用說明',
+                usageContent: `
+                    - 建議中午 12 點附近曬太陽，UVB(維他命D)相對高，UVA(皮膚老化)相對低。<br>
+                    - 在曬傷之前曬夠維生素 D 就對了。<br>
+                    - 輸入經緯度後，會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a>
+                    資料算出天頂角。您也可以利用此網址知道各地緯度、經度<br>
+                    - 「天頂角數據表1倍」來自YT影片。<br>
+                    - 不在數據表中的天頂角由 AI用線性插值估算，可作參考。<br>
+                `,
+                labelLat: '🔸輸入緯度（正為北緯）：',
+                labelLon: '🔸輸入經度（正為東經）：',
+                autoDetect: '📍 自動定位',
+                labelTimezone: '🔸選擇時區：<br>',
+                labelTimezoneNote: '（自動定位由經度推時區，夏令時間可能UTC+1或+2）',
+                labelDate: '🔸選擇日期：',
+                todayBtn: '📅 今天',
+                labelTime: '🔸輸入時間：<br>',
+                labelTimeNote: '（請輸入當地時間）',
+                nowBtn: '⏱️ 現在',
+                labelWeather: '🔸選擇天氣條件：<br>',
+                labelWeatherNote: '（影響紫外線強度）',
+                weatherSunny: '晴天（雲量佔天空20%以下，陽光直射，影子清晰）',
+                weatherPartly: '多雲（雲量50%左右，能看到太陽輪廓，影子模糊）',
+                weatherCloudy: '陰天/陰雨天（雲量80%以上，幾乎看不到太陽，無影子）',
+                labelSkinType: '🔸膚色耐受性：',
+                skinWhite: '白人（1倍）',
+                skinAsian: '亞洲人（1.5倍）',
+                skinMaori: '毛利人（2倍）',
+                skinBlack: '黑人（幾乎黑，5倍）',
+                skinCustom: '自訂',
+                labelQuickOutfit: '🔸快速穿著預設：',
+                quickCustom: '⚙️ 自定義',
+                quickShorts: '🩳 短短拖 (45.5%）',
+                quickLong: '👖 長長鞋（10%）',
+                labelBodyParts: '🔸選擇穿著部位與覆蓋情況：',
+                headNeckHandsTitle: '頭部、脖子、手穿著 <span style="font-size: 0.8em; color: var(--text-light);">(預設無遮蓋)</span>',
+                labelHead: '🔹頭部：',
+                labelNeck: '🔹脖子：',
+                labelHands: '🔹手：',
+                torsoLegsFeetTitle: '上衣、下身、腳穿著',
+                labelTorso: '🔹上衣：',
+                labelLegs: '🔹下身：',
+                labelFeet: '🔹腳：',
+                calcBtn: '<i class="fas fa-calculator"></i> 計算結果',
+                langSwitcher: 'English'
+            },
+            'en': {
+                title: 'Scientific Sunbathing',
+                subtitle: 'Source: MDJJ猛爹將軍, Recommended YT Video <a href="https://youtu.be/K0wp58UI8sE?si=_XJlQx64gIJDBQZv" target="_blank">Watch here</a>',
+                privacy: 'Privacy: All input data is processed locally on your device. No location or data is uploaded or stored.',
+                usageTitle: 'Instructions',
+                usageContent: `
+                    - Sunbathe around noon for the highest UVB (vitamin D) and lowest UVA (skin aging).<br>
+                    - Get enough vitamin D before getting sunburn.<br>
+                    - After entering latitude/longitude, <a href="https://www.suncalc.org/" target="_blank">SunCalc</a> is used to calculate the zenith angle.<br>
+                    - The "Zenith Angle Data Table 1x" is derived from the YT video.<br>
+                    - Zenith angles not in the table are estimated by linear interpolation.<br>
+                `,
+                labelLat: '🔸Latitude (north is positive):',
+                labelLon: '🔸Longitude (east is positive):',
+                autoDetect: '📍 Auto detect',
+                labelTimezone: '🔸Select timezone:<br>',
+                labelTimezoneNote: '(Timezone estimated from longitude, DST may apply)',
+                labelDate: '🔸Select date:',
+                todayBtn: '📅 Today',
+                labelTime: '🔸Local time:<br>',
+                labelTimeNote: '(Please enter local time)',
+                nowBtn: '⏱️ Now',
+                labelWeather: '🔸Weather condition:<br>',
+                labelWeatherNote: '(Affects UV intensity)',
+                weatherSunny: 'Sunny (cloud < 20%, direct sun, sharp shadow)',
+                weatherPartly: 'Partly cloudy (about 50% cloud, sun visible, blurry shadow)',
+                weatherCloudy: 'Cloudy/rainy (cloud > 80%, sun invisible, no shadow)',
+                labelSkinType: '🔸Skin tolerance:',
+                skinWhite: 'White (1×)',
+                skinAsian: 'Asian (1.5×)',
+                skinMaori: 'Maori (2×)',
+                skinBlack: 'Black (near black, 5×)',
+                skinCustom: 'Custom',
+                labelQuickOutfit: '🔸Quick outfit preset:',
+                quickCustom: '⚙️ Custom',
+                quickShorts: '🩳 Shorts & T-shirt (45.5%)',
+                quickLong: '👖 Long sleeves & pants (10%)',
+                labelBodyParts: '🔸Choose body parts & coverage:',
+                headNeckHandsTitle: 'Head, Neck, Hands <span style="font-size: 0.8em; color: var(--text-light);">(default: uncovered)</span>',
+                labelHead: '🔹Head:',
+                labelNeck: '🔹Neck:',
+                labelHands: '🔹Hands:',
+                torsoLegsFeetTitle: 'Torso, Legs, Feet',
+                labelTorso: '🔹Torso:',
+                labelLegs: '🔹Legs:',
+                labelFeet: '🔹Feet:',
+                calcBtn: '<i class="fas fa-calculator"></i> Calculate',
+                langSwitcher: '中文'
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'zh-Hant';
+
+function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('lang', lang);
+    const d = langDict[lang];
+    safeSetHTML('title', d.title);
+    safeSetHTML('subtitle', d.subtitle);
+    safeSetHTML('privacyNotice', d.privacy);
+    safeSetHTML('usageTitle', d.usageTitle);
+    safeSetHTML('usageContent', d.usageContent);
+    safeSetHTML('labelLat', d.labelLat);
+    safeSetHTML('labelLon', d.labelLon);
+    safeSetHTML('autoDetectBtn', d.autoDetect);
+    safeSetHTML('labelTimezone', d.labelTimezone);
+    safeSetHTML('labelTimezoneNote', d.labelTimezoneNote);
+    safeSetHTML('labelDate', d.labelDate);
+    safeSetHTML('todayBtn', d.todayBtn);
+    safeSetHTML('labelTime', d.labelTime);
+    safeSetHTML('labelTimeNote', d.labelTimeNote);
+    safeSetHTML('nowBtn', d.nowBtn);
+    safeSetHTML('labelWeather', d.labelWeather);
+    safeSetHTML('labelWeatherNote', d.labelWeatherNote);
+    safeSetHTML('labelSkinType', d.labelSkinType);
+    safeSetHTML('labelQuickOutfit', d.labelQuickOutfit);
+    safeSetHTML('labelBodyParts', d.labelBodyParts);
+    safeSetHTML('headNeckHandsTitle', d.headNeckHandsTitle);
+    safeSetHTML('labelHead', d.labelHead);
+    safeSetHTML('labelNeck', d.labelNeck);
+    safeSetHTML('labelHands', d.labelHands);
+    safeSetHTML('torsoLegsFeetTitle', d.torsoLegsFeetTitle);
+    safeSetHTML('labelTorso', d.labelTorso);
+    safeSetHTML('labelLegs', d.labelLegs);
+    safeSetHTML('labelFeet', d.labelFeet);
+    safeSetHTML('calcBtn', d.calcBtn);
+    safeSetText('langSwitcherText', d.langSwitcher);
+
+    // rebuild 時區
+    const tzSel = document.getElementById('timezone');
+    if (tzSel) {
+        const oldValue = tzSel.value;
+        tzSel.innerHTML = timezones.map(tz =>
+            `<option value="${tz.value}"${oldValue == tz.value ? ' selected' : ''}>${lang === "zh-Hant" ? tz.zh : tz.en}</option>`
+        ).join('');
+        tzSel.value = oldValue;
+    }
+// rebuild weather select
+const weatherSel = document.getElementById('weather');
+if (weatherSel) {
+    const oldValue = weatherSel.value;
+    weatherSel.innerHTML = weatherOptions.map(opt =>
+        `<option value="${opt.value}"${oldValue === opt.value ? ' selected' : ''}>${lang === "zh-Hant" ? opt.zh : opt.en}</option>`
+    ).join('');
+    weatherSel.value = oldValue;
+}
+    // rebuild 各部位選單
+    for (const part in bodyPartOptions) {
+        const sel = document.getElementById(part);
+        if (sel) {
+            const oldValue = sel.value;
+            sel.innerHTML = bodyPartOptions[part].map(opt =>
+                `<option value="${opt.value}"${oldValue == opt.value ? ' selected' : ''}>${lang === "zh-Hant" ? opt.zh : opt.en}</option>`
+            ).join('');
+            sel.value = oldValue;
+        }
+    }
+    // rebuild 膚色選單
+    const skinSel = document.getElementById('skinType');
+    if (skinSel) {
+        const oldValue = skinSel.value;
+        skinSel.innerHTML = skinTypeOptions.map(opt =>
+            `<option value="${opt.value}"${oldValue == opt.value ? ' selected' : ''}>${lang === "zh-Hant" ? opt.zh : opt.en}</option>`
+        ).join('');
+        skinSel.value = oldValue;
+    }
+    // rebuild 快速穿著選單（不翻譯icon）
+    const quickSel = document.getElementById('quickOutfit');
+    if (quickSel) {
+        const quickOpts = [
+            {value: "custom", zh: "⚙️ 自定義", en: "⚙️ Custom"},
+            {value: "shorts_tshirt_slippers", zh: "🩳 短短拖 (45.5%）", en: "🩳 Shorts & T-shirt (45.5%)"},
+            {value: "longsleeve_longpants_shoes", zh: "👖 長長鞋（10%）", en: "👖 Long sleeves & pants (10%)"}
+        ];
+        const oldValue = quickSel.value;
+        quickSel.innerHTML = quickOpts.map(opt =>
+            `<option value="${opt.value}"${oldValue == opt.value ? ' selected' : ''}>${lang==="zh-Hant"?opt.zh:opt.en}</option>`
+        ).join('');
+        quickSel.value = oldValue;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setLang(currentLang);
+    var langSw = document.getElementById('langSwitcher');
+    if (langSw) {
+        langSw.onclick = function() {
+            setLang(currentLang === 'zh-Hant' ? 'en' : 'zh-Hant');
+        };
+    }
+});
+
+          // 膚色自訂顯示/隱藏
+        function handleSkinTypeChange() {
+            const skinType = document.getElementById('skinType').value;
+            const customInput = document.getElementById('customSkinType');
+            if (skinType === 'custom') {
+                customInput.style.display = '';
+                customInput.value = localStorage.getItem('customSkinType') || '1.5';
+            } else {
+                customInput.style.display = 'none';
+            }
+            saveSelections();
+        }
+
+        // 儲存與載入
         function saveSelections() {
             const selects = document.querySelectorAll('.body-parts-card select');
             selects.forEach(select => {
                 localStorage.setItem(`bodyPart_${select.id}`, select.value);
             });
-            const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit'];
+            const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit', 'skinType'];
             inputs.forEach(id => {
                 const element = document.getElementById(id);
                 if (element && element.value) {
                     localStorage.setItem(`saved_${id}`, element.value);
                 }
             });
+            // customSkinType
+            const customSkinType = document.getElementById('customSkinType');
+            if (customSkinType && customSkinType.value) {
+                localStorage.setItem('customSkinType', customSkinType.value);
+            }
         }
 
         function loadSelections() {
@@ -684,13 +1047,22 @@
                 const savedValue = localStorage.getItem(`bodyPart_${select.id}`);
                 if (savedValue) select.value = savedValue;
             });
-            const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit'];
+            const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit', 'skinType'];
             inputs.forEach(id => {
                 const savedValue = localStorage.getItem(`saved_${id}`);
                 const element = document.getElementById(id);
                 if (savedValue && element) element.value = savedValue;
             });
+            // customSkinType
+            const customSkinType = document.getElementById('customSkinType');
+            const savedCustomSkinType = localStorage.getItem('customSkinType');
+            if (customSkinType && savedCustomSkinType) customSkinType.value = savedCustomSkinType;
+
+            // 切換膚色自訂欄位顯示
+            handleSkinTypeChange();
         }
+
+        // 其他功能與原有一樣...
 
         function setToday() {
             const today = new Date();
@@ -746,13 +1118,10 @@
                 const element = document.getElementById(part);
                 if (element) element.value = value;
             });
+            // 預設收起頭脖手卡片
             const headNeckHandsCard = document.getElementById('bodyPartsHeadNeckHands');
-            headNeckHandsCard.setAttribute('data-expanded', 'true');
-            headNeckHandsCard.querySelector('i').className = 'fas fa-chevron-up';
-            setTimeout(() => {
-                headNeckHandsCard.setAttribute('data-expanded', 'false');
-                headNeckHandsCard.querySelector('i').className = 'fas fa-chevron-down';
-            }, 2000);
+            headNeckHandsCard.setAttribute('data-expanded', 'false');
+            headNeckHandsCard.querySelector('i').className = 'fas fa-chevron-down';
             saveSelections();
         }
 
@@ -806,36 +1175,59 @@
             const weather = document.getElementById('weather').value;
 
             if (!date) {
-                errors.date.innerText = '請選擇日期。';
+                errors.date.innerText = currentLang === 'zh-Hant' ? '請選擇日期。' : 'Please select a date.';
                 errors.date.classList.add('show');
                 isValid = false;
             }
             if (!time) {
-                errors.time.innerText = '請輸入時間。';
+                errors.time.innerText = currentLang === 'zh-Hant' ? '請輸入時間。' : 'Please enter time.';
                 errors.time.classList.add('show');
                 isValid = false;
             }
             if (isNaN(timezone) || timezone < -12 || timezone > 14) {
-                errors.timezone.innerText = '請選擇有效時區（UTC-12 到 UTC+14）。';
+                errors.timezone.innerText = currentLang === 'zh-Hant' ? '請選擇有效時區（UTC-12 到 UTC+14）。' : 'Invalid timezone. (UTC-12 to UTC+14)';
                 errors.timezone.classList.add('show');
                 isValid = false;
             }
             if (isNaN(lat) || lat < -90 || lat > 90) {
-                errors.lat.innerText = '請輸入有效緯度（-90 到 90）。';
+                errors.lat.innerText = currentLang === 'zh-Hant' ? '請輸入有效緯度（-90 到 90）。' : 'Invalid latitude (-90 to 90).';
                 errors.lat.classList.add('show');
                 isValid = false;
             }
             if (isNaN(lon) || lon < -180 || lon > 180) {
-                errors.lon.innerText = '請輸入有效經度（-180 到 180）。';
+                errors.lon.innerText = currentLang === 'zh-Hant' ? '請輸入有效經度（-180 到 180）。' : 'Invalid longitude (-180 to 180).';
                 errors.lon.classList.add('show');
                 isValid = false;
             }
             if (!weather) {
-                errors.weather.innerText = '請選擇天氣條件。';
+                errors.weather.innerText = currentLang === 'zh-Hant' ? '請選擇天氣條件。' : 'Please select weather.';
                 errors.weather.classList.add('show');
                 isValid = false;
             }
+            // 膚色自訂檢查
+            const skinType = document.getElementById('skinType').value;
+            if (skinType === 'custom') {
+                const custom = parseFloat(document.getElementById('customSkinType').value);
+                if (isNaN(custom) || custom < 0.1 || custom > 5.0) {
+                    errors.lat.innerText = currentLang === 'zh-Hant'
+                        ? '請輸入膚色耐受性(0.1~5.0)。'
+                        : 'Enter skin tolerance (0.1 to 5.0)';
+                    errors.lat.classList.add('show');
+                    isValid = false;
+                }
+            }
             return isValid;
+        }
+
+        function getSkinTolerance() {
+            const skinType = document.getElementById('skinType').value;
+            if (skinType === 'custom') {
+                let val = parseFloat(document.getElementById('customSkinType').value);
+                if (isNaN(val)) val = 1.5;
+                return val;
+            } else {
+                return parseFloat(skinType);
+            }
         }
 
         function calculateZenithAngle() {
@@ -852,11 +1244,12 @@
                 const lat = parseFloat(document.getElementById('lat').value);
                 const lon = parseFloat(document.getElementById('lon').value);
                 const weather = document.getElementById('weather').value;
+                const skinTolerance = getSkinTolerance();
 
                 const weatherFactors = {
-                    sunny: { factor: 1.0, description: '晴天，紫外線無衰減' },
-                    partly_cloudy: { factor: 0.7, description: '多雲，紫外線減少約 30%' },
-                    cloudy: { factor: 0.3, description: '陰天/陰雨天，紫外線減少約 70%' }
+                    sunny: { factor: 1.0, description: currentLang === 'zh-Hant' ? '晴天，紫外線無衰減' : 'Sunny, no UV reduction' },
+                    partly_cloudy: { factor: 0.7, description: currentLang === 'zh-Hant' ? '多雲，紫外線減少約 30%' : 'Partly cloudy, UV reduced ~30%' },
+                    cloudy: { factor: 0.3, description: currentLang === 'zh-Hant' ? '陰天/陰雨天，紫外線減少約 70%' : 'Cloudy/rainy, UV reduced ~70%' }
                 };
                 const cloudFactor = weatherFactors[weather].factor;
                 const weatherDescription = weatherFactors[weather].description;
@@ -903,30 +1296,30 @@
                     .map(id => parseFloat(document.getElementById(id).value))
                     .reduce((a, b) => a + b, 0);
 
-                let vitDTime = totalBSA <= 0 ? null : data.vitD10 * (10 / totalBSA) * 1.5 / cloudFactor;
-                let displayMinutesFor4000 = totalBSA <= 0 ? '無法計算（無曝露面積）' : Math.round(vitDTime * 4);
-                let sunburnTime = data.sunburn100 * 1.5 / cloudFactor;
+                let vitDTime = totalBSA <= 0 ? null : data.vitD10 * (10 / totalBSA) * skinTolerance / cloudFactor;
+                let displayMinutesFor4000 = totalBSA <= 0 ? (currentLang === 'zh-Hant' ? '無法計算（無曝露面積）' : 'N/A (no exposed area)') : Math.round(vitDTime * 4);
+                let sunburnTime = data.sunburn100 * skinTolerance / cloudFactor;
 
                 const dataCardHTML = `
                     <div class="data-card-header" onclick="toggleDataCard()">
-                        <h3>天頂角數據表</h3>
+                        <h3>${currentLang === 'zh-Hant' ? '天頂角數據表' : 'Zenith Angle Data Table'}</h3>
                         <i class="fas fa-chevron-down" id="dataCardIcon"></i>
                     </div>
                     <div class="data-card-content">
-                        <div class="table-note">亞洲人1.5倍耐受性 / 單位分鐘 / 基於${weatherDescription}</div>
+                        <div class="table-note">${(currentLang === 'zh-Hant' ? '膚色耐受性' : 'Skin tolerance')}${skinTolerance}× / ${currentLang === 'zh-Hant' ? '單位分鐘' : 'minutes'} / ${weatherDescription}</div>
                         <table class="data-table">
                             <tr>
-                                <th>天頂角</th>
-                                <th>曬傷時間</th>
-                                <th>維他命D 1000 IU (10%)</th>
-                                <th>維他命D 4000 IU (10%)</th>
+                                <th>${currentLang === 'zh-Hant' ? '天頂角' : 'Zenith'}</th>
+                                <th>${currentLang === 'zh-Hant' ? '曬傷時間' : 'Sunburn'}</th>
+                                <th>${currentLang === 'zh-Hant' ? '維他命D 1000 IU (10%)' : 'Vit D 1000IU (10%)'}</th>
+                                <th>${currentLang === 'zh-Hant' ? '維他命D 4000 IU (10%)' : 'Vit D 4000IU (10%)'}</th>
                             </tr>
                             ${Object.keys(uvData).sort((a, b) => b - a).map(key => `
                                 <tr>
                                     <td>${key}°</td>
-                                    <td>${Math.round(uvData[key].sunburn100 * 1.5 / cloudFactor)}</td>
-                                    <td>${Number((uvData[key].vitD10 * 1.5 / cloudFactor).toFixed(1))}</td>
-                                    <td>${Number((uvData[key].vitD10 * 1.5 * 4 / cloudFactor).toFixed(1))}</td>
+                                    <td>${Math.round(uvData[key].sunburn100 * skinTolerance / cloudFactor)}</td>
+                                    <td>${Number((uvData[key].vitD10 * skinTolerance / cloudFactor).toFixed(1))}</td>
+                                    <td>${Number((uvData[key].vitD10 * skinTolerance * 4 / cloudFactor).toFixed(1))}</td>
                                 </tr>
                             `).join('')}
                         </table>
@@ -939,28 +1332,28 @@
                     resultClass = '';
                     resultHTML = `
                         <div class="result-zenith-angle">
-                            <strong>太陽高度角：</strong> ${altitude.toFixed(1)}° · 
-                            <strong>天頂角：</strong> 約 ${roundedZenith}°
+                            <strong>${currentLang === 'zh-Hant' ? '太陽高度角' : 'Solar Altitude'}：</strong> ${altitude.toFixed(1)}° · 
+                            <strong>${currentLang === 'zh-Hant' ? '天頂角' : 'Zenith'}：</strong> ${currentLang === 'zh-Hant' ? '約 ' : 'about '} ${roundedZenith}°
                         </div>
                         <p style="text-align: center; color: #46A3FF">${weatherDescription}
                         <div class="result-main-info">
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-person"></i></span>
-                                <span class="label">曝露面積：</span>
+                                <span class="label">${currentLang === 'zh-Hant' ? '曝露面積：' : 'Exposed area:'}</span>
                                 <span class="value">${totalBSA.toFixed(1)}%</span>
                             </div>
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-sun"></i></span>
-                                <span class="label">建議時間：</span>
-                                <span class="value vitd-time">明日請早</span>
+                                <span class="label">${currentLang === 'zh-Hant' ? '建議時間：' : 'Recommended:'}</span>
+                                <span class="value vitd-time">${currentLang === 'zh-Hant' ? '明日請早' : 'No sun'}</span>
                             </div>
-                            <div class="sub-description">（太陽尚未升起，無法合成維他命 D）</div>
+                            <div class="sub-description">${currentLang === 'zh-Hant' ? '（太陽尚未升起，無法合成維他命 D）' : '(Sun below horizon, no vitamin D synthesis)'}</div>
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-fire"></i></span>
-                                <span class="label">曬傷時間：</span>
-                                <span class="value sunburn-time">天黑沒事</span>
+                                <span class="label">${currentLang === 'zh-Hant' ? '曬傷時間：' : 'Sunburn:'}</span>
+                                <span class="value sunburn-time">${currentLang === 'zh-Hant' ? '天黑沒事' : 'No risk'}</span>
                             </div>
-                            <div class="sub-description">（太陽在地平線以下，無曬傷風險）</div>
+                            <div class="sub-description">${currentLang === 'zh-Hant' ? '（太陽在地平線以下，無曬傷風險）' : '(Sun below horizon, no sunburn risk)'}</div>
                         </div>
                     `;
                 } else {
@@ -971,28 +1364,28 @@
                     }
                     resultHTML = `
                         <div class="result-zenith-angle">
-                            <strong>太陽高度角：</strong> ${altitude.toFixed(1)}° · 
-                            <strong>天頂角：</strong> 約 ${roundedZenith}°
+                            <strong>${currentLang === 'zh-Hant' ? '太陽高度角' : 'Solar Altitude'}：</strong> ${altitude.toFixed(1)}° · 
+                            <strong>${currentLang === 'zh-Hant' ? '天頂角' : 'Zenith'}：</strong> ${currentLang === 'zh-Hant' ? '約 ' : 'about '} ${roundedZenith}°
                         </div>
                         <p style="text-align: center; color: #46A3FF">${weatherDescription}
                         <div class="result-main-info">
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-person"></i></span>
-                                <span class="label">曝露面積：</span>
+                                <span class="label">${currentLang === 'zh-Hant' ? '曝露面積：' : 'Exposed area:'}</span>
                                 <span class="value">${totalBSA.toFixed(1)}%</span>
                             </div>
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-sun"></i></span>
-                                <span class="label">建議時間：</span>
-                                <span class="value vitd-time">${displayMinutesFor4000} 分鐘</span>
+                                <span class="label">${currentLang === 'zh-Hant' ? '建議時間：' : 'Recommended:'}</span>
+                                <span class="value vitd-time">${displayMinutesFor4000} ${currentLang === 'zh-Hant' ? '分鐘' : 'min'}</span>
                             </div>
-                            <div class="sub-description">（可吸收約 4000 IU 維他命 D）</div>
+                            <div class="sub-description">${currentLang === 'zh-Hant' ? '（可吸收約 4000 IU 維他命 D）' : '(About 4000 IU vitamin D)'}</div>
                             <div class="result-item">
                                 <span class="result-item-icon"><i class="fas fa-fire"></i></span>
-                                <span class="label">曬傷時間：</span>
-                                <span class="value sunburn-time">${Math.round(sunburnTime)} 分鐘</span>
+                                <span class="label">${currentLang === 'zh-Hant' ? '曬傷時間：' : 'Sunburn:'}</span>
+                                <span class="value sunburn-time">${Math.round(sunburnTime)} ${currentLang === 'zh-Hant' ? '分鐘' : 'min'}</span>
                             </div>
-                            <div class="sub-description">（曝曬部位可能開始曬傷）</div>
+                            <div class="sub-description">${currentLang === 'zh-Hant' ? '（曝曬部位可能開始曬傷）' : '(Exposed parts may get sunburned)'}</div>
                         </div>
                     `;
                 }
@@ -1004,7 +1397,7 @@
                 document.getElementById('dataCardIcon').className = 'fas fa-chevron-down';
             } catch (error) {
                 console.error('Error in calculateZenithAngle:', error);
-                document.getElementById('result').innerHTML = '<div class="error-message show">計算錯誤，請檢查輸入或資料。';
+                document.getElementById('result').innerHTML = '<div class="error-message show">' + (currentLang === 'zh-Hant' ? '計算錯誤，請檢查輸入或資料。' : 'Calculation error, please check input.');
                 document.getElementById('dataCard').innerHTML = '';
             }
         }
@@ -1016,6 +1409,15 @@
             const userTimezoneOffset = -(new Date().getTimezoneOffset() / 60);
             document.getElementById('timezone').value = userTimezoneOffset;
             applyQuickOutfit();
+
+            // 預設收起頭脖手卡片
+            const headNeckHandsCard = document.getElementById('bodyPartsHeadNeckHands');
+            headNeckHandsCard.setAttribute('data-expanded', 'false');
+            headNeckHandsCard.querySelector('i').className = 'fas fa-chevron-down';
+
+            const torsoLegsFeetCard = document.getElementById('bodyPartsTorsoLegsFeet');
+            torsoLegsFeetCard.setAttribute('data-expanded', 'true');
+            torsoLegsFeetCard.querySelector('i').className = 'fas fa-chevron-up';
 
             const infoCard = document.getElementById('infoCard');
             const infoCardIcon = document.getElementById('infoCardIcon');
@@ -1042,26 +1444,22 @@
                 }
             }
 
-            const headNeckHandsCard = document.getElementById('bodyPartsHeadNeckHands');
-            const torsoLegsFeetCard = document.getElementById('bodyPartsTorsoLegsFeet');
-            const savedHeadNeckHandsState = localStorage.getItem('bodyPartsHeadNeckHandsExpanded');
-            const savedTorsoLegsFeetState = localStorage.getItem('bodyPartsTorsoLegsFeetExpanded');
-            headNeckHandsCard.setAttribute('data-expanded', savedHeadNeckHandsState || 'false');
-            headNeckHandsCard.querySelector('i').className = `fas fa-chevron-${savedHeadNeckHandsState === 'true' ? 'up' : 'down'}`;
-            torsoLegsFeetCard.setAttribute('data-expanded', savedTorsoLegsFeetState || 'true');
-            torsoLegsFeetCard.querySelector('i').className = `fas fa-chevron-${savedTorsoLegsFeetState === 'false' ? 'down' : 'up'}`;
-
-            const inputs = ['lat', 'lon', 'date', 'time', 'weather', 'quickOutfit'];
+            // 輸入欄位綁定 save
+            const inputs = ['lat', 'lon', 'date', 'time', 'weather', 'quickOutfit', 'skinType', 'customSkinType'];
             inputs.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
                     element.addEventListener('change', saveSelections);
+                    element.addEventListener('input', saveSelections);
                 }
             });
 
             document.querySelectorAll('.body-parts-card select').forEach(select => {
                 select.addEventListener('change', saveSelections);
             });
+
+            // 膚色自訂欄位顯示
+            document.getElementById('skinType').addEventListener('change', handleSkinTypeChange);
         });
     </script>
 </body>
