@@ -1081,31 +1081,53 @@ document.addEventListener('DOMContentLoaded', function() {
             saveSelections();
         }
 
-        function autoDetectLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    pos => {
-                        const lat = pos.coords.latitude.toFixed(5);
-                        const lon = pos.coords.longitude.toFixed(5);
-                        document.getElementById('lat').value = lat;
-                        document.getElementById('lon').value = lon;
-                        const estimatedOffset = Math.round(lon / 15);
-                        document.getElementById('timezone').value = estimatedOffset;
-                        document.getElementById('timezone-error').innerText = `自動推估時區：UTC${estimatedOffset >= 0 ? '+' : ''}${estimatedOffset}，請確認正確。`;
-                        document.getElementById('timezone-error').classList.add('show');
-                        saveSelections();
-                    },
-                    err => {
-                        document.getElementById('lon-error').innerText = '無法獲取位置，請檢查權限或手動輸入經緯度。';
-                        document.getElementById('lon-error').classList.add('show');
-                    },
-                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-                );
-            } else {
-                document.getElementById('lon-error').innerText = '瀏覽器不支援定位功能。';
-                document.getElementById('lon-error').classList.add('show');
+// 自動定位：用設備時區與時間
+function autoDetectLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                const lat = pos.coords.latitude.toFixed(5);
+                const lon = pos.coords.longitude.toFixed(5);
+                document.getElementById('lat').value = lat;
+                document.getElementById('lon').value = lon;
+
+                const now = new Date();
+                const tzOffsetMinutes = now.getTimezoneOffset();
+                const estimatedOffset = -tzOffsetMinutes / 60;
+                document.getElementById('timezone').value = Math.round(estimatedOffset);
+
+                document.getElementById('date').value = now.toISOString().slice(0,10);
+                document.getElementById('time').value = now.toTimeString().slice(0,5);
+
+                document.getElementById('timezone-error').innerText = 
+                    `已依裝置設定自動選擇時區：UTC${estimatedOffset >= 0 ? '+' : ''}${Math.round(estimatedOffset)}`;
+                document.getElementById('timezone-error').classList.add('show');
+                saveSelections();
+            },
+            err => {
+                alert('定位失敗，請手動輸入經緯度');
             }
-        }
+        );
+    }
+}
+
+// 手動輸入經度時，自動推估時區
+document.addEventListener('DOMContentLoaded', function() {
+    const lonInput = document.getElementById('lon');
+    if (lonInput) {
+        lonInput.addEventListener('change', function() {
+            const lon = parseFloat(this.value);
+            if (!isNaN(lon) && lon >= -180 && lon <= 180) {
+                const estimatedOffset = Math.round(lon / 15);
+                document.getElementById('timezone').value = estimatedOffset;
+                document.getElementById('timezone-error').innerText =
+                    `自動推估時區：UTC${estimatedOffset >= 0 ? '+' : ''}${estimatedOffset}，請確認正確。`;
+                document.getElementById('timezone-error').classList.add('show');
+                saveSelections();
+            }
+        });
+    }
+});
 
         function applyQuickOutfit() {
             const outfit = document.getElementById('quickOutfit').value;
