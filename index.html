@@ -515,8 +515,7 @@
                     - 輸入經緯度後，會自動抓取 <a href="https://www.suncalc.org/" target="_blank">SunCalc</a>
                     資料算出天頂角。您也可以利用此網址知道各地緯度、經度<br>
                     - 「天頂角數據表」來自YT影片，根據亞洲人膚色調整過（1.5 倍耐受性）。<br>
-					- 不在數據表中的天頂角由 AI用線性插值估算，可作參考。<br>
-
+                    - 不在數據表中的天頂角由 AI用線性插值估算，可作參考。<br>
                 </p>
             </div>
         </div>
@@ -565,7 +564,6 @@
     <option value="13">UTC+13:00（紐西蘭極東部）</option>
     <option value="14">UTC+14:00（基里巴斯）</option>
 </select>
-
         </div>
         <div id="timezone-error" class="error-message"></div>
 
@@ -683,7 +681,7 @@
         function loadSelections() {
             const selects = document.querySelectorAll('.body-parts-card select');
             selects.forEach(select => {
-            const savedValue = localStorage.getItem(`bodyPart_${select.id}`);
+                const savedValue = localStorage.getItem(`bodyPart_${select.id}`);
                 if (savedValue) select.value = savedValue;
             });
             const inputs = ['lat', 'lon', 'date', 'time', 'timezone', 'weather', 'quickOutfit'];
@@ -695,8 +693,12 @@
         }
 
         function setToday() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('date').value = today;
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            document.getElementById('date').value = formattedDate;
             saveSelections();
         }
 
