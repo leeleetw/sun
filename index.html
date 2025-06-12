@@ -101,21 +101,22 @@
             font-size: 1.05em;
         }
 
-        input[type="date"],
-        input[type="time"],
-        input[type="number"],
-        select {
-            display: block;
-            width: 100%;
-            padding: 0.8em 1em;
-            margin-bottom: 0.8em;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-            background-color: #fcfcfc;
-        }
+    input[type="date"],
+input[type="time"],
+input[type="number"],
+input[type="text"],
+select {
+    display: block;
+    width: 100%;
+    padding: 0.8em 1em;
+    margin-bottom: 0.8em;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background-color: #fcfcfc;
+}
 
         input:focus,
         select:focus {
@@ -125,17 +126,20 @@
             background-color: #fff;
         }
 
-        .flex-row {
-            display: flex;
-            gap: 0.8em;
-            align-items: center;
-        }
+.flex-row {
+    display: flex;
+    gap: 0.8em;
+    align-items: center;
+}
+.flex-row input,
+.flex-row select {
+    flex-grow: 1;
+    margin-bottom: 0.8em;
+}
 
-        .flex-row input,
-        .flex-row select {
-            flex-grow: 1;
-            margin-bottom: 0;
-        }
+input[type="text"] {
+    font-family: 'Noto Sans TC', sans-serif;
+}
 
         button {
             background-color: var(--primary-color);
@@ -551,15 +555,16 @@
             </div>
         </div>
 
-        <label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
- <input type="text" id="lat" placeholder="例如：25.033 或 -33.868" inputmode="text" required>
-        <div id="lat-error" class="error-message"></div>
+<label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
+<input type="text" id="lat" placeholder="例如：25.033 或 -33.868" inputmode="text" required>
+<div id="lat-error" class="error-message"></div>
 
-        <label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
-        <div class="flex-row">
-   <input type="text" id="lon" placeholder="例如：121.539 或 -151.209" inputmode="text" required>
-            <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
-        </div>
+<label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
+<div class="flex-row">
+    <input type="text" id="lon" placeholder="例如：121.539 或 -151.209" inputmode="text" required style="flex-grow: 1;">
+    <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
+</div>
+<div id="lon-error" class="error-message"></div>
         <div id="lon-error" class="error-message"></div>
 
         <label for="timezone" id="labelTimezone">🔸選擇時區：<br>
