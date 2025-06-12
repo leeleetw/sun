@@ -552,12 +552,12 @@
         </div>
 
         <label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
-        <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required inputmode="decimal">
+ <input type="text" id="lat" placeholder="例如：25.033 或 -33.868" inputmode="text" required>
         <div id="lat-error" class="error-message"></div>
 
         <label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
         <div class="flex-row">
-            <input type="number" step="any" id="lon" placeholder="例如：121.565" min="-180" max="180" required inputmode="decimal">
+   <input type="text" id="lon" placeholder="例如：121.539 或 -151.209" inputmode="text" required>
             <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
         </div>
         <div id="lon-error" class="error-message"></div>
@@ -1174,72 +1174,79 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('infoCardExpanded', !isExpanded);
         }
 
-        function validateInputs() {
-            let isValid = true;
-            const errors = {
-                date: document.getElementById('date-error'),
-                time: document.getElementById('time-error'),
-                timezone: document.getElementById('timezone-error'),
-                lat: document.getElementById('lat-error'),
-                lon: document.getElementById('lon-error'),
-                weather: document.getElementById('weather-error')
-            };
-            Object.values(errors).forEach(error => {
-                error.innerText = '';
-                error.classList.remove('show');
-            });
+function validateInputs() {
+    let isValid = true;
+    const errors = {
+        date: document.getElementById('date-error'),
+        time: document.getElementById('time-error'),
+        timezone: document.getElementById('timezone-error'),
+        lat: document.getElementById('lat-error'),
+        lon: document.getElementById('lon-error'),
+        weather: document.getElementById('weather-error')
+    };
+    Object.values(errors).forEach(error => {
+        error.innerText = '';
+        error.classList.remove('show');
+    });
 
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const timezone = parseFloat(document.getElementById('timezone').value);
-            const lat = parseFloat(document.getElementById('lat').value);
-            const lon = parseFloat(document.getElementById('lon').value);
-            const weather = document.getElementById('weather').value;
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const timezone = parseFloat(document.getElementById('timezone').value);
+    const latInput = document.getElementById('lat').value.trim();
+    const lonInput = document.getElementById('lon').value.trim();
+    const weather = document.getElementById('weather').value;
 
-            if (!date) {
-                errors.date.innerText = currentLang === 'zh-Hant' ? '請選擇日期。' : 'Please select a date.';
-                errors.date.classList.add('show');
-                isValid = false;
-            }
-            if (!time) {
-                errors.time.innerText = currentLang === 'zh-Hant' ? '請輸入時間。' : 'Please enter time.';
-                errors.time.classList.add('show');
-                isValid = false;
-            }
-            if (isNaN(timezone) || timezone < -12 || timezone > 14) {
-                errors.timezone.innerText = currentLang === 'zh-Hant' ? '請選擇有效時區（UTC-12 到 UTC+14）。' : 'Invalid timezone. (UTC-12 to UTC+14)';
-                errors.timezone.classList.add('show');
-                isValid = false;
-            }
-            if (isNaN(lat) || lat < -90 || lat > 90) {
-                errors.lat.innerText = currentLang === 'zh-Hant' ? '請輸入有效緯度（-90 到 90）。' : 'Invalid latitude (-90 to 90).';
-                errors.lat.classList.add('show');
-                isValid = false;
-            }
-            if (isNaN(lon) || lon < -180 || lon > 180) {
-                errors.lon.innerText = currentLang === 'zh-Hant' ? '請輸入有效經度（-180 到 180）。' : 'Invalid longitude (-180 to 180).';
-                errors.lon.classList.add('show');
-                isValid = false;
-            }
-            if (!weather) {
-                errors.weather.innerText = currentLang === 'zh-Hant' ? '請選擇天氣條件。' : 'Please select weather.';
-                errors.weather.classList.add('show');
-                isValid = false;
-            }
-            // 膚色自訂檢查
-            const skinType = document.getElementById('skinType').value;
-            if (skinType === 'custom') {
-                const custom = parseFloat(document.getElementById('customSkinType').value);
-                if (isNaN(custom) || custom < 0.1 || custom > 5.0) {
-                    errors.lat.innerText = currentLang === 'zh-Hant'
-                        ? '請輸入膚色耐受性(0.1~5.0)。'
-                        : 'Enter skin tolerance (0.1 to 5.0)';
-                    errors.lat.classList.add('show');
-                    isValid = false;
-                }
-            }
-            return isValid;
+    // 驗證緯度
+    const lat = parseFloat(latInput);
+    if (!latInput || isNaN(lat) || lat < -90 || lat > 90) {
+        errors.lat.innerText = currentLang === 'zh-Hant' ? '請輸入有效緯度（-90 到 90）。' : 'Invalid latitude (-90 to 90).';
+        errors.lat.classList.add('show');
+        isValid = false;
+    }
+
+    // 驗證經度
+    const lon = parseFloat(lonInput);
+    if (!lonInput || isNaN(lon) || lon < -180 || lon > 180) {
+        errors.lon.innerText = currentLang === 'zh-Hant' ? '請輸入有效經度（-180 到 180，包含 ±180）。' : 'Invalid longitude (-180 to 180, inclusive).';
+        errors.lon.classList.add('show');
+        isValid = false;
+    }
+
+    if (!date) {
+        errors.date.innerText = currentLang === 'zh-Hant' ? '請選擇日期。' : 'Please select a date.';
+        errors.date.classList.add('show');
+        isValid = false;
+    }
+    if (!time) {
+        errors.time.innerText = currentLang === 'zh-Hant' ? '請輸入時間。' : 'Please enter time.';
+        errors.time.classList.add('show');
+        isValid = false;
+    }
+    if (isNaN(timezone) || timezone < -12 || timezone > 14) {
+        errors.timezone.innerText = currentLang === 'zh-Hant' ? '請選擇有效時區（UTC-12 到 UTC+14）。' : 'Invalid timezone. (UTC-12 to UTC+14)';
+        errors.timezone.classList.add('show');
+        isValid = false;
+    }
+    if (!weather) {
+        errors.weather.innerText = currentLang === 'zh-Hant' ? '請選擇天氣條件。' : 'Please select weather.';
+        errors.weather.classList.add('show');
+        isValid = false;
+    }
+    // 膚色自訂檢查
+    const skinType = document.getElementById('skinType').value;
+    if (skinType === 'custom') {
+        const custom = parseFloat(document.getElementById('customSkinType').value);
+        if (isNaN(custom) || custom < 0.1 || custom > 5.0) {
+            errors.weather.innerText = currentLang === 'zh-Hant'
+                ? '請輸入有效膚色耐受性（0.1 到 5.0）。'
+                : 'Enter valid skin tolerance (0.1 to 5.0).';
+            errors.weather.classList.add('show');
+            isValid = false;
         }
+    }
+
+    return isValid;
+}
 
         function getSkinTolerance() {
             const skinType = document.getElementById('skinType').value;
@@ -1431,6 +1438,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const userTimezoneOffset = -(new Date().getTimezoneOffset() / 60);
             document.getElementById('timezone').value = userTimezoneOffset;
             applyQuickOutfit();
+
+// 添加輸入過濾
+    ['lat', 'lon'].forEach(id => {
+        const input = document.getElementById(id);
+        input.addEventListener('input', (e) => {
+            const value = e.target.value;
+            // 只允許數字、負號、小數點，且確保格式正確
+            e.target.value = value.replace(/[^-0-9.]/g, '') // 移除無效字符
+                .replace(/^(-?)\D*(-?)(\d*)\D*(\.?\d*)\D*/g, '$1$3$4'); // 確保格式為 -?數字.小數
+            saveSelections();
+        });
+    });
+
 
             // 預設收起頭脖手卡片
             const headNeckHandsCard = document.getElementById('bodyPartsHeadNeckHands');
