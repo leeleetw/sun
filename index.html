@@ -551,16 +551,18 @@
             </div>
         </div>
 
-        <label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
-        <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required inputmode="decimal">
-        <div id="lat-error" class="error-message"></div>
+<!-- 修改後的緯度輸入欄位 -->
+<label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
+<input type="number" step="any" id="lat" placeholder="例如：25.033 或 -25.033" inputmode="decimal" required>
+<div id="lat-error" class="error-message"></div>
 
-        <label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
-        <div class="flex-row">
-            <input type="number" step="any" id="lon" placeholder="例如：121.565" min="-180" max="180" required inputmode="decimal">
-            <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
-        </div>
-        <div id="lon-error" class="error-message"></div>
+<!-- 修改後的經度輸入欄位 -->
+<label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
+<div class="flex-row">
+    <input type="number" step="any" id="lon" placeholder="例如：121.565 或 -121.565" inputmode="decimal" required>
+    <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
+</div>
+<div id="lon-error" class="error-message"></div>
 
         <label for="timezone" id="labelTimezone">🔸選擇時區：<br>
             <span id="labelTimezoneNote" style="font-size: 0.8em; color: #666;">（自動定位由經度推時區，夏令時間可能UTC+1或+2）</span>
@@ -1100,7 +1102,7 @@ function autoDetectLocation() {
                 document.getElementById('time').value = now.toTimeString().slice(0,5);
 
                 document.getElementById('timezone-error').innerText = 
-                    `已依裝置設定自動選擇時區：UTC${estimatedOffset >= 0 ? '+' : ''}${Math.round(estimatedOffset)}`;
+                    `Timezone automatically selected based on device settings：UTC${estimatedOffset >= 0 ? '+' : ''}${Math.round(estimatedOffset)}`;
                 document.getElementById('timezone-error').classList.add('show');
                 saveSelections();
             },
@@ -1121,7 +1123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const estimatedOffset = Math.round(lon / 15);
                 document.getElementById('timezone').value = estimatedOffset;
                 document.getElementById('timezone-error').innerText =
-                    `自動推估時區：UTC${estimatedOffset >= 0 ? '+' : ''}${estimatedOffset}，請確認正確。`;
+                    `依經度自動推估時區：UTC${estimatedOffset >= 0 ? '+' : ''}${estimatedOffset}，請確認正確。`;
                 document.getElementById('timezone-error').classList.add('show');
                 saveSelections();
             }
@@ -1211,16 +1213,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 errors.timezone.classList.add('show');
                 isValid = false;
             }
-            if (isNaN(lat) || lat < -90 || lat > 90) {
-                errors.lat.innerText = currentLang === 'zh-Hant' ? '請輸入有效緯度（-90 到 90）。' : 'Invalid latitude (-90 to 90).';
-                errors.lat.classList.add('show');
-                isValid = false;
-            }
-            if (isNaN(lon) || lon < -180 || lon > 180) {
-                errors.lon.innerText = currentLang === 'zh-Hant' ? '請輸入有效經度（-180 到 180）。' : 'Invalid longitude (-180 to 180).';
-                errors.lon.classList.add('show');
-                isValid = false;
-            }
+if (isNaN(lat) || lat < -90 || lat > 90) {
+        errors.lat.innerText = currentLang === 'zh-Hant' ? '請輸入有效緯度（-90 到 90）。' : 'Invalid latitude (-90 to 90).';
+        errors.lat.classList.add('show');
+        isValid = false;
+    }
+    if (isNaN(lon) || lon < -180 || lon > 180) {
+        errors.lon.innerText = currentLang === 'zh-Hant' ? '請輸入有效經度（-180 到 180）。' : 'Invalid longitude (-180 to 180).';
+        errors.lon.classList.add('show');
+        isValid = false;
+    }
             if (!weather) {
                 errors.weather.innerText = currentLang === 'zh-Hant' ? '請選擇天氣條件。' : 'Please select weather.';
                 errors.weather.classList.add('show');
