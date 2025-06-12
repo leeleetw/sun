@@ -552,12 +552,12 @@
         </div>
 
         <label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
-        <input type="number" step="any" id="lat" placeholder="例如：25.033 or -60.983" min="-90" max="90" required inputmode="decimal">
+        <input type="text" step="any" id="lat" placeholder="例如：25.033 or -60.983" min="-90" max="90" required inputmode="decimal">
         <div id="lat-error" class="error-message"></div>
 
         <label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
         <div class="flex-row">
-            <input type="number" step="any" id="lon" placeholder="例如：121.565 or -90.324" min="-180" max="180" required inputmode="decimal">
+            <input type="text" step="any" id="lon" placeholder="例如：121.565 or -90.324" min="-180" max="180" required inputmode="decimal">
             <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
         </div>
         <div id="lon-error" class="error-message"></div>
