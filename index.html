@@ -551,18 +551,16 @@
             </div>
         </div>
 
-<!-- 緯度輸入欄位（不變） -->
-<label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
-<input type="text" id="lat" placeholder="例如：25.033 或 -33.868" inputmode="decimal" pattern="[-+]?[0-9]*\.?[0-9]+" required>
-<div id="lat-error" class="error-message"></div>
+        <label for="lat" id="labelLat">🔸輸入緯度（正為北緯）：</label>
+        <input type="number" step="any" id="lat" placeholder="例如：25.033" min="-90" max="90" required inputmode="decimal">
+        <div id="lat-error" class="error-message"></div>
 
-<!-- 經度輸入欄位（不變） -->
-<label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
-<div class="flex-row">
-    <input type="text" id="lon" placeholder="例如：121.539 或 -151.209" inputmode="decimal" pattern="[-+]?[0-9]*\.?[0-9]+" required>
-    <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
-</div>
-<div id="lon-error" class="error-message"></div>
+        <label for="lon" id="labelLon">🔸輸入經度（正為東經）：</label>
+        <div class="flex-row">
+            <input type="number" step="any" id="lon" placeholder="例如：121.565" min="-180" max="180" required inputmode="decimal">
+            <button class="inline" onclick="autoDetectLocation()" id="autoDetectBtn">📍 自動定位</button>
+        </div>
+        <div id="lon-error" class="error-message"></div>
 
         <label for="timezone" id="labelTimezone">🔸選擇時區：<br>
             <span id="labelTimezoneNote" style="font-size: 0.8em; color: #666;">（自動定位由經度推時區，夏令時間可能UTC+1或+2）</span>
@@ -1182,8 +1180,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 date: document.getElementById('date-error'),
                 time: document.getElementById('time-error'),
                 timezone: document.getElementById('timezone-error'),
-        lat: document.getElementById('lat-error'),
-        lon: document.getElementById('lon-error'), // 使用明確的 ID 代替 querySelectorAll
+                lat: document.getElementById('lat-error'),
+                lon: document.getElementById('lon-error'),
                 weather: document.getElementById('weather-error')
             };
             Object.values(errors).forEach(error => {
@@ -1194,9 +1192,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
             const timezone = parseFloat(document.getElementById('timezone').value);
-    // 解析文本輸入			
-    const lat = parseFloat(document.getElementById('lat').value);
-    const lon = parseFloat(document.getElementById('lon').value);
+            const lat = parseFloat(document.getElementById('lat').value);
+            const lon = parseFloat(document.getElementById('lon').value);
             const weather = document.getElementById('weather').value;
 
             if (!date) {
@@ -1214,19 +1211,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 errors.timezone.classList.add('show');
                 isValid = false;
             }
-    // 緯度驗證
-    if (isNaN(lat) || lat < -90 || lat > 90) {
-        errors.lat.textContent = currentLang === 'zh-Hant' ? '請輸入有效緯度（-90 到 90）。' : 'Invalid latitude (-90 to 90).';
-        errors.lat.classList.add('show');
-        isValid = false;
-    }
-
-    // 經度驗證
-    if (isNaN(lon) || lon < -180 || lon > 180) {
-        errors.lon.textContent = currentLang === 'zh-Hant' ? '請輸入有效經度（-180 到 180，包含 ±180）。' : 'Invalid longitude (-180 to 180, inclusive).';
-        errors.lon.classList.add('show');
-        isValid = false;
-    }
+            if (isNaN(lat) || lat < -90 || lat > 90) {
+                errors.lat.innerText = currentLang === 'zh-Hant' ? '請輸入有效緯度（-90 到 90）。' : 'Invalid latitude (-90 to 90).';
+                errors.lat.classList.add('show');
+                isValid = false;
+            }
+            if (isNaN(lon) || lon < -180 || lon > 180) {
+                errors.lon.innerText = currentLang === 'zh-Hant' ? '請輸入有效經度（-180 到 180）。' : 'Invalid longitude (-180 to 180).';
+                errors.lon.classList.add('show');
+                isValid = false;
+            }
             if (!weather) {
                 errors.weather.innerText = currentLang === 'zh-Hant' ? '請選擇天氣條件。' : 'Please select weather.';
                 errors.weather.classList.add('show');
